@@ -1,293 +1,276 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Non-Profit and NGO Invoice Template — Grant Allocation and Donor Reports | GetInvoicePDF.com</title>
-    <meta name="description" content="">
-    <link rel="canonical" href="https://www.getinvoicepdf.com/blog/nonprofit-ngo-invoice-template/">
+#!/usr/bin/env python3
+import json, os, re
+from datetime import datetime
+from pathlib import Path
 
-    <!-- Open Graph -->
-    <meta property="og:title" content="Non-Profit and NGO Invoice Template — Grant Allocation and Donor Reports | GetInvoicePDF.com">
-    <meta property="og:description" content="">
-    <meta property="og:type" content="article">
-    <meta property="og:url" content="https://www.getinvoicepdf.com/blog/nonprofit-ngo-invoice-template/">
-    <meta property="og:image" content="/og-image.png">
-    <meta name="twitter:card" content="summary_large_image">
+ARTICLES_JSON = "articles-data.json"
+TEMPLATE_FILE = "article-template.html"
+OUTPUT_DIR = "blog"
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
-                    colors: {
-                        brand: { 50:'#f5f3ff', 100:'#ede9fe', 500:'#7c3aed', 600:'#6d28d9', 700:'#5b21b6', 900:'#2e1065' }
-                    }
-                }
-            }
-        }
-    </script>
-
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest" defer></script>
-
-    <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Article",
-  "headline": "Non-Profit and NGO Invoice Template \u2014 Grant Allocation and Donor Reports",
-  "description": "",
-  "image": "https://www.getinvoicepdf.com/og-image.png",
-  "datePublished": "2026-06-19T05:53:26.502059",
-  "dateModified": "2026-06-19T05:53:26.502059",
-  "author": {
-    "@type": "Organization",
-    "name": "GetInvoicePDF.com",
-    "url": "https://www.getinvoicepdf.com"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "GetInvoicePDF.com",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://www.getinvoicepdf.com/logo.png"
-    }
-  },
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "https://www.getinvoicepdf.com/blog/nonprofit-ngo-invoice-template/"
-  }
+SIMPLE_MAP = {
+    "title": "ARTICLE_TITLE",
+    "slug": "CANONICAL_SLUG",
+    "excerpt": "ARTICLE_DEK",
+    "h1": "ARTICLE_H1",
+    "modified_date_display": "MODIFIED_DATE_DISPLAY",
+    "read_time": "READ_TIME",
+    "faq_intro": "FAQ_INTRO_LINE",
+    "publish_date_iso": "PUBLISH_DATE_ISO",
+    "modified_date_iso": "MODIFIED_DATE_ISO",
 }
-</script>
 
-    <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "https://www.getinvoicepdf.com/"
-    },
-    {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Invoicing Guides",
-      "item": "https://www.getinvoicepdf.com/blog/"
-    },
-    {
-      "@type": "ListItem",
-      "position": 3,
-      "name": "Non-Profit and NGO Invoice Template \u2014 Grant Allocation and Donor Reports",
-      "item": "https://www.getinvoicepdf.com/blog/nonprofit-ngo-invoice-template/"
+def load_json(path):
+    with open(path, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+def read_template(path):
+    with open(path, "r", encoding="utf-8") as f:
+        return f.read()
+
+def write_output(path, content):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(content)
+
+def find_build_blocks(template):
+    pattern = r"<!--\s*BUILD:(\w+)\s*-->(.*?)<!--\s*/BUILD:\1\s*-->"
+    blocks = {}
+    for match in re.finditer(pattern, template, re.DOTALL):
+        name = match.group(1)
+        blocks[name] = (match.start(), match.end(), match.group(2))
+    return blocks
+
+def replace_build_blocks(template, blocks_map):
+    pattern = r"<!--\s*BUILD:(\w+)\s*-->.*?<!--\s*/BUILD:\1\s*-->"
+    replacements = []
+    for match in re.finditer(pattern, template, re.DOTALL):
+        name = match.group(1)
+        if name in blocks_map:
+            replacements.append((match.start(), match.end(), blocks_map[name]))
+    for start, end, new_content in reversed(replacements):
+        template = template[:start] + new_content + template[end:]
+    return template
+
+def build_rich_body(title, excerpt, category):
+    topic = title.split("—")[0].strip() or title
+    category_intros = {
+        "creative": "For creative professionals, your invoice is a reflection of your brand. Clear, itemized billing builds trust and reduces revisions.",
+        "tech": "Tech projects often involve scope creep and evolving requirements. A well-structured invoice protects your time and ensures you're compensated for every hour.",
+        "pro": "Professional services rely on trust and transparency. Detailed invoices with retainer terms and expense breakdowns are non-negotiable.",
+        "trades": "In construction and logistics, every material and hour counts. Separating labor from supplies avoids disputes and keeps your clients informed.",
+        "niche": "Specialty services demand specialized billing. Whether it's healthcare or events, your invoice must meet industry-specific compliance.",
+        "late": "Late payments hurt cash flow. Mastering the art of follow-up and penalty enforcement is essential for freelancers.",
+        "core": "Mastering the fundamentals of invoicing – from numbering to tax – is the foundation of a healthy business."
     }
-  ]
-}
-</script>
+    intro_text = category_intros.get(category, "Professional invoicing is the backbone of a successful freelance business.")
 
-    
+    sections = []
+    sections.append(f"<h2 class='text-2xl font-bold text-slate-900 mt-10 mb-3 border-l-4 border-brand-500 pl-4'>Introduction to {topic}</h2>")
+    sections.append(f"<p class='text-slate-600 leading-relaxed mb-4'>{excerpt}</p>")
+    sections.append(f"<p class='text-slate-600 leading-relaxed mb-4'>{intro_text} This guide walks you through every line item and legal consideration so you can bill with confidence.</p>")
 
-    <style>
-        html { scroll-behavior: smooth; }
-        .faq-body, .accordion-body { transition: max-height 0.3s ease-in-out; }
-        .lucide-chevron-down { transition: transform 0.3s ease-in-out; }
+    sections.append(f"<h2 class='text-2xl font-bold text-slate-900 mt-10 mb-3 border-l-4 border-brand-500 pl-4'>Key Components of a {topic} Invoice</h2>")
+    sections.append("<ul class='list-disc pl-6 mb-4 text-slate-600 space-y-2'>")
+    sections.append("  <li><strong class='text-slate-900'>Detailed Service Description:</strong> Be specific – avoid vague terms like 'consulting' or 'work'.</li>")
+    sections.append("  <li><strong class='text-slate-900'>Clear Pricing Structure:</strong> Hourly, project-based, or retainer – choose the right model.</li>")
+    sections.append("  <li><strong class='text-slate-900'>Expense Reimbursement:</strong> Outline how costs like travel, materials, or software are billed.</li>")
+    sections.append("  <li><strong class='text-slate-900'>Tax and Currency:</strong> Apply correct VAT/GST rates and use a currency that matches your contract.</li>")
+    sections.append("</ul>")
 
-        .ad-slot-leaderboard { min-height: 90px; }
-        .ad-slot-leaderboard .ad-unit { min-width: 320px; min-height: 50px; }
-        @media (min-width: 768px) { .ad-slot-leaderboard .ad-unit { min-width: 728px; min-height: 90px; } }
-        .ad-slot-native { min-height: 280px; }
-        .ad-slot-native .ad-unit { min-width: 300px; min-height: 250px; }
-        .ad-slot-bottom { min-height: 250px; }
-        .ad-slot-bottom .ad-unit { min-width: 320px; min-height: 100px; }
-        @media (min-width: 768px) { .ad-slot-bottom .ad-unit { min-width: 728px; min-height: 90px; } }
-        .ad-slot-sticky-mobile {
-            position: sticky; bottom: 0; z-index: 40; min-height: 60px;
+    category_tips = {
+        "creative": "Always include revision limits and usage rights (e.g., commercial vs editorial) to avoid extra work without compensation.",
+        "tech": "Track time with a reliable tool and attach logs if you bill hourly. For fixed-price, break the project into milestones.",
+        "pro": "Consider a retainer model to ensure predictable income. Clearly define what's included and what triggers additional fees.",
+        "trades": "Include a separate line for materials (with receipts) and labor. This makes it easy for clients to verify and for you to claim deductions.",
+        "niche": "For medical or event billing, use the correct coding (CPT/ICD‑10 for healthcare) and separate vendor pass-through costs.",
+        "late": "State your late fee policy clearly – it speeds up payment even if you never enforce it.",
+        "core": "Number your invoices sequentially and keep copies for audit purposes – it's a legal requirement in many jurisdictions."
+    }
+    tip = category_tips.get(category, "Customise your invoice to reflect your specific service offering and client expectations.")
+    sections.append(f"<h2 class='text-2xl font-bold text-slate-900 mt-10 mb-3 border-l-4 border-brand-500 pl-4'>Pro Tips for Your Industry</h2>")
+    sections.append(f"<p class='text-slate-600 leading-relaxed mb-4'>{tip}</p>")
+
+    sections.append(f"<h2 class='text-2xl font-bold text-slate-900 mt-10 mb-3 border-l-4 border-brand-500 pl-4'>Step‑by‑Step Billing Workflow</h2>")
+    sections.append("<ol class='list-decimal pl-6 mb-4 text-slate-600 space-y-2'>")
+    sections.append("  <li><strong class='text-slate-900'>Create the Invoice:</strong> Use a template or generator to populate client and service details.</li>")
+    sections.append("  <li><strong class='text-slate-900'>Set Currency & Tax:</strong> Select the correct currency and apply the appropriate tax rates.</li>")
+    sections.append("  <li><strong class='text-slate-900'>Define the Due Date:</strong> Calculate the payment deadline based on your agreed terms (e.g., Net 30).</li>")
+    sections.append("  <li><strong class='text-slate-900'>Review & Send:</strong> Double‑check all figures and send to your client via email.</li>")
+    sections.append("  <li><strong class='text-slate-900'>Follow Up Systematically:</strong> Use a polite reminder at Day 1, a firm notice at Day 7, and a formal demand at Day 30 if needed.</li>")
+    sections.append("</ol>")
+
+    sections.append(f"<h2 class='text-2xl font-bold text-slate-900 mt-10 mb-3 border-l-4 border-brand-500 pl-4'>Legal & Tax Compliance</h2>")
+    sections.append("<p class='text-slate-600 leading-relaxed mb-4'>Your invoice is a legal document. In the UK, the <strong>Late Payment of Commercial Debts Act 1998</strong> allows you to charge statutory interest (8% above Bank of England base rate) and a fixed recovery fee. In the US, late fee rates vary by state — 1.5% per month (18% APR) is generally considered reasonable. In the EU, the <strong>Late Payment Directive 2011/7/EU</strong> entitles you to interest at the ECB rate plus 8 percentage points.</p>")
+    sections.append("<p class='text-slate-600 leading-relaxed mb-4'>Always include a clear late fee clause on your invoice to protect your rights. If you operate internationally, be aware of currency exchange risks and SWIFT routing fees.</p>")
+
+    sections.append(f"<h2 class='text-2xl font-bold text-slate-900 mt-10 mb-3 border-l-4 border-brand-500 pl-4'>Best Practices for Faster Payment</h2>")
+    sections.append("<ul class='list-disc pl-6 mb-4 text-slate-600 space-y-2'>")
+    sections.append("  <li>Send invoices immediately after project completion or milestone delivery.</li>")
+    sections.append("  <li>Use consistent numbering (e.g., INV‑001, INV‑002) to avoid gaps or duplicates.</li>")
+    sections.append("  <li>Offer multiple payment methods — bank transfer, credit card, and digital wallets.</li>")
+    sections.append("  <li>Keep a record of all communication in case of disputes.</li>")
+    sections.append("</ul>")
+
+    sections.append(f"<h2 class='text-2xl font-bold text-slate-900 mt-10 mb-3 border-l-4 border-brand-500 pl-4'>Generate Your Professional Invoice Instantly</h2>")
+    sections.append("<p class='text-slate-600 leading-relaxed mb-4'>Manual invoicing is time‑consuming and error‑prone. Our free, browser‑based invoice generator includes every field discussed in this guide — from late fee calculators to multi‑currency support. No sign‑up required, and your data never leaves your device.</p>")
+    sections.append("<div class='bg-brand-50 border border-brand-200 rounded-xl p-6 text-center my-6'>")
+    sections.append("  <p class='font-bold text-slate-900 text-lg'>Ready to create your invoice now?</p>")
+    sections.append("  <a href='/#invoice-tool' class='inline-block mt-3 bg-brand-500 hover:bg-brand-600 text-white px-6 py-3 rounded-lg font-semibold transition-all shadow-sm'>Generate Invoice PDF — Free</a>")
+    sections.append("</div>")
+    return "\n".join(sections)
+
+def generate_article_html(article, template):
+    context = {}
+    for json_key, placeholder in SIMPLE_MAP.items():
+        value = article.get(json_key, "")
+        if placeholder == "META_DESCRIPTION" and not value:
+            value = article.get("excerpt", article.get("title", ""))
+        if placeholder == "ARTICLE_H1" and not value:
+            value = article.get("title", "")
+        context[placeholder] = value
+
+    today = datetime.now()
+    if not context.get("MODIFIED_DATE_DISPLAY"):
+        context["MODIFIED_DATE_DISPLAY"] = today.strftime("%B %d, %Y")
+    if not context.get("PUBLISH_DATE_ISO"):
+        context["PUBLISH_DATE_ISO"] = today.isoformat()
+    if not context.get("MODIFIED_DATE_ISO"):
+        context["MODIFIED_DATE_ISO"] = today.isoformat()
+    context["READ_TIME"] = "3"
+
+    for placeholder, value in context.items():
+        template = template.replace("", str(value))
+
+    blocks = find_build_blocks(template)
+    new_blocks = {}
+
+    # JSONLD_ARTICLE
+    if "JSONLD_ARTICLE" in blocks:
+        schema = {
+            "@context": "https://schema.org",
+            "@type": "Article",
+            "headline": context.get("ARTICLE_TITLE", ""),
+            "description": context.get("META_DESCRIPTION", ""),
+            "image": "https://www.getinvoicepdf.com/og-image.png",
+            "datePublished": context.get("PUBLISH_DATE_ISO", ""),
+            "dateModified": context.get("MODIFIED_DATE_ISO", ""),
+            "author": {"@type": "Organization", "name": "GetInvoicePDF.com", "url": "https://www.getinvoicepdf.com"},
+            "publisher": {
+                "@type": "Organization",
+                "name": "GetInvoicePDF.com",
+                "logo": {"@type": "ImageObject", "url": "https://www.getinvoicepdf.com/logo.png"}
+            },
+            "mainEntityOfPage": {"@type": "WebPage", "@id": f"https://www.getinvoicepdf.com/blog/{context.get('CANONICAL_SLUG', '')}/"}
         }
-        .ad-slot-sticky-mobile .ad-unit { min-width: 320px; min-height: 50px; }
-    </style>
-</head>
-<body class="bg-white text-slate-600 font-sans antialiased selection:bg-brand-100 selection:text-brand-900">
+        new_blocks["JSONLD_ARTICLE"] = f'<script type="application/ld+json">\n{json.dumps(schema, indent=2)}\n</script>'
 
-    <!-- Navigation -->
-    <nav class="w-full bg-white/90 backdrop-blur-sm border-b border-slate-200 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <a href="/" class="flex items-center gap-2">
-                <i data-lucide="zap" class="w-6 h-6 text-brand-500 fill-brand-500"></i>
-                <span class="font-bold text-xl text-slate-900 tracking-tight">GetInvoicePDF<span class="text-brand-500">.com</span></span>
-            </a>
-            <a href="/#invoice-tool" class="bg-brand-500 hover:bg-brand-600 text-white px-4 py-2 rounded-lg font-medium text-sm transition-all shadow-sm flex items-center gap-2">
-                <span class="hidden sm:inline">Generate Invoice PDF</span>
-                <i data-lucide="arrow-right" class="w-4 h-4"></i>
-            </a>
-        </div>
-    </nav>
+    # JSONLD_BREADCRUMB
+    if "JSONLD_BREADCRUMB" in blocks:
+        breadcrumb = {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.getinvoicepdf.com/"},
+                {"@type": "ListItem", "position": 2, "name": "Invoicing Guides", "item": "https://www.getinvoicepdf.com/blog/"},
+                {"@type": "ListItem", "position": 3, "name": context.get("ARTICLE_TITLE", ""), "item": f"https://www.getinvoicepdf.com/blog/{context.get('CANONICAL_SLUG', '')}/"}
+            ]
+        }
+        new_blocks["JSONLD_BREADCRUMB"] = f'<script type="application/ld+json">\n{json.dumps(breadcrumb, indent=2)}\n</script>'
 
-    <!-- Ad Leaderboard -->
-    <div class="ad-slot-leaderboard w-full bg-slate-50 border-b border-slate-200 flex flex-col items-center justify-center py-2">
-        <span class="text-[10px] text-slate-400 uppercase tracking-wider mb-1">Advertisement</span>
-        <div class="ad-unit bg-slate-200 flex items-center justify-center text-slate-400 text-sm rounded">
-            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="XXXXXXXXXX" data-ad-format="auto" data-full-width-responsive="true"></ins>
-            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-        </div>
+    # JSONLD_FAQ
+    if "JSONLD_FAQ" in blocks:
+        faq_list = article.get("faq", [])
+        if faq_list:
+            main_entity = []
+            for item in faq_list:
+                main_entity.append({
+                    "@type": "Question",
+                    "name": item.get("question", ""),
+                    "acceptedAnswer": {"@type": "Answer", "text": item.get("answer", "")}
+                })
+            faq_schema = {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": main_entity}
+            new_blocks["JSONLD_FAQ"] = f'<script type="application/ld+json">\n{json.dumps(faq_schema, indent=2)}\n</script>'
+        else:
+            new_blocks["JSONLD_FAQ"] = ""
+
+    # ARTICLE_BODY
+    body_html = article.get("body_html", "")
+    if body_html:
+        final_body = body_html
+    else:
+        title = article.get("title", "")
+        excerpt = article.get("excerpt", "")
+        category = article.get("cat", "core")
+        final_body = build_rich_body(title, excerpt, category)
+
+    word_count = len(re.findall(r'\w+', final_body))
+    read_time = max(3, round(word_count / 200))
+    context["READ_TIME"] = str(read_time)
+    template = template.replace("3", str(read_time))
+    new_blocks["ARTICLE_BODY"] = final_body
+
+    # FAQ_SECTION
+    if "FAQ_SECTION" in blocks:
+        faq_list = article.get("faq", [])
+        if faq_list and "FAQ_ITEM" in blocks:
+            faq_item_inner = blocks["FAQ_ITEM"][2]
+            rendered_items = []
+            for item in faq_list:
+                q = item.get("question", "")
+                a = item.get("answer", "")
+                rendered = faq_item_inner.replace("", q).replace("", a)
+                rendered_items.append(rendered)
+            intro = context.get("FAQ_INTRO_LINE", "Get answers to common questions about this topic.")
+            faq_section_html = f'''
+<section class="faq-section max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+    <h2 class="text-2xl font-bold text-slate-900 mb-2">Frequently Asked Questions</h2>
+    <p class="text-slate-500 mb-4">{intro}</p>
+    <div class="faq-list divide-y divide-slate-200 border-t border-slate-200">
+        {''.join(rendered_items)}
     </div>
+</section>
+'''
+            new_blocks["FAQ_SECTION"] = faq_section_html
+        else:
+            new_blocks["FAQ_SECTION"] = ""
 
-    <!-- Breadcrumb -->
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-        <nav class="text-sm text-slate-400 flex items-center gap-2 flex-wrap" aria-label="Breadcrumb">
-            <a href="/" class="hover:text-brand-600 transition-colors">Home</a>
-            <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
-            <a href="/blog/" class="hover:text-brand-600 transition-colors">Invoicing Guides</a>
-            <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
-            <span class="text-slate-600 font-medium">Non-Profit and NGO Invoice Template — Grant Allocation and Donor Reports</span>
-        </nav>
-    </div>
+    # RELATED_CARD
+    if "RELATED_CARD" in blocks:
+        related_list = article.get("related", [])
+        if related_list:
+            card_template_inner = blocks["RELATED_CARD"][2]
+            rendered_cards = []
+            for rel in related_list:
+                slug = rel.get("slug", "")
+                title = rel.get("title", "")
+                card = card_template_inner.replace("", slug).replace("", title)
+                rendered_cards.append(card)
+            new_blocks["RELATED_CARD"] = "\n".join(rendered_cards)
+        else:
+            new_blocks["RELATED_CARD"] = "<!-- No related articles -->"
 
-    <!-- Article Header -->
-    <header class="w-full pt-6 pb-8 px-4 max-w-3xl mx-auto">
-        <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900 leading-tight tracking-tight">Non-Profit and NGO Invoice Template — Grant Allocation and Donor Reports</h1>
-        <p class="text-lg text-slate-500 mt-4 leading-relaxed">Grant-funded invoices need to show exactly which funding source paid for which line item, or your organization risks failing its next compliance audit. This guide covers tax-exempt invoicing mechanics and the donor-reporting layout grant administrators expect.</p>
-        <div class="flex items-center gap-3 mt-5 text-sm text-slate-400">
-            <span class="flex items-center gap-1.5"><i data-lucide="calendar" class="w-4 h-4"></i> Updated June 19, 2026</span>
-            <span class="flex items-center gap-1.5"><i data-lucide="clock" class="w-4 h-4"></i> 3 min read</span>
-        </div>
-    </header>
+    template = replace_build_blocks(template, new_blocks)
+    template = re.sub(r"\{\{[^}]+\}\}", "", template)
+    return template
 
-    <!-- Top CTA -->
-    <section class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
-        <div class="bg-brand-50 border border-brand-100 rounded-2xl px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div>
-                <p class="font-bold text-slate-900 text-base">Skip the manual formatting</p>
-                <p class="text-sm text-slate-600 mt-1">Generate this exact invoice structure as a PDF in under 60 seconds — free, no sign-up.</p>
-            </div>
-            <a href="/#invoice-tool" class="shrink-0 inline-flex items-center gap-2 bg-brand-500 hover:bg-brand-600 text-white px-5 py-2.5 rounded-lg font-semibold text-sm transition-all shadow-sm whitespace-nowrap">
-                Generate Invoice PDF <i data-lucide="arrow-right" class="w-4 h-4"></i>
-            </a>
-        </div>
-    </section>
+def main():
+    data = load_json(ARTICLES_JSON)
+    template = read_template(TEMPLATE_FILE)
+    articles = data.get("articles", [])
+    if not articles:
+        print("No articles found.")
+        return
 
-    <!-- Article Body -->
-    <article class="seo-article max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-4">
-        <h2 class='text-2xl font-bold text-slate-900 mt-10 mb-3 border-l-4 border-brand-500 pl-4'>Introduction to Non-Profit and NGO Invoice Template</h2>
-<p class='text-slate-600 leading-relaxed mb-4'>Grant-funded invoices need to show exactly which funding source paid for which line item, or your organization risks failing its next compliance audit. This guide covers tax-exempt invoicing mechanics and the donor-reporting layout grant administrators expect.</p>
-<p class='text-slate-600 leading-relaxed mb-4'>Specialty services demand specialized billing. Whether it's healthcare or events, your invoice must meet industry-specific compliance. This guide walks you through every line item and legal consideration so you can bill with confidence.</p>
-<h2 class='text-2xl font-bold text-slate-900 mt-10 mb-3 border-l-4 border-brand-500 pl-4'>Key Components of a Non-Profit and NGO Invoice Template Invoice</h2>
-<ul class='list-disc pl-6 mb-4 text-slate-600 space-y-2'>
-  <li><strong class='text-slate-900'>Detailed Service Description:</strong> Be specific – avoid vague terms like 'consulting' or 'work'.</li>
-  <li><strong class='text-slate-900'>Clear Pricing Structure:</strong> Hourly, project-based, or retainer – choose the right model.</li>
-  <li><strong class='text-slate-900'>Expense Reimbursement:</strong> Outline how costs like travel, materials, or software are billed.</li>
-  <li><strong class='text-slate-900'>Tax and Currency:</strong> Apply correct VAT/GST rates and use a currency that matches your contract.</li>
-</ul>
-<h2 class='text-2xl font-bold text-slate-900 mt-10 mb-3 border-l-4 border-brand-500 pl-4'>Pro Tips for Your Industry</h2>
-<p class='text-slate-600 leading-relaxed mb-4'>For medical or event billing, use the correct coding (CPT/ICD‑10 for healthcare) and separate vendor pass-through costs.</p>
-<h2 class='text-2xl font-bold text-slate-900 mt-10 mb-3 border-l-4 border-brand-500 pl-4'>Step‑by‑Step Billing Workflow</h2>
-<ol class='list-decimal pl-6 mb-4 text-slate-600 space-y-2'>
-  <li><strong class='text-slate-900'>Create the Invoice:</strong> Use a template or generator to populate client and service details.</li>
-  <li><strong class='text-slate-900'>Set Currency & Tax:</strong> Select the correct currency and apply the appropriate tax rates.</li>
-  <li><strong class='text-slate-900'>Define the Due Date:</strong> Calculate the payment deadline based on your agreed terms (e.g., Net 30).</li>
-  <li><strong class='text-slate-900'>Review & Send:</strong> Double‑check all figures and send to your client via email.</li>
-  <li><strong class='text-slate-900'>Follow Up Systematically:</strong> Use a polite reminder at Day 1, a firm notice at Day 7, and a formal demand at Day 30 if needed.</li>
-</ol>
-<h2 class='text-2xl font-bold text-slate-900 mt-10 mb-3 border-l-4 border-brand-500 pl-4'>Legal & Tax Compliance</h2>
-<p class='text-slate-600 leading-relaxed mb-4'>Your invoice is a legal document. In the UK, the <strong>Late Payment of Commercial Debts Act 1998</strong> allows you to charge statutory interest (8% above Bank of England base rate) and a fixed recovery fee. In the US, late fee rates vary by state — 1.5% per month (18% APR) is generally considered reasonable. In the EU, the <strong>Late Payment Directive 2011/7/EU</strong> entitles you to interest at the ECB rate plus 8 percentage points.</p>
-<p class='text-slate-600 leading-relaxed mb-4'>Always include a clear late fee clause on your invoice to protect your rights. If you operate internationally, be aware of currency exchange risks and SWIFT routing fees.</p>
-<h2 class='text-2xl font-bold text-slate-900 mt-10 mb-3 border-l-4 border-brand-500 pl-4'>Best Practices for Faster Payment</h2>
-<ul class='list-disc pl-6 mb-4 text-slate-600 space-y-2'>
-  <li>Send invoices immediately after project completion or milestone delivery.</li>
-  <li>Use consistent numbering (e.g., INV‑001, INV‑002) to avoid gaps or duplicates.</li>
-  <li>Offer multiple payment methods — bank transfer, credit card, and digital wallets.</li>
-  <li>Keep a record of all communication in case of disputes.</li>
-</ul>
-<h2 class='text-2xl font-bold text-slate-900 mt-10 mb-3 border-l-4 border-brand-500 pl-4'>Generate Your Professional Invoice Instantly</h2>
-<p class='text-slate-600 leading-relaxed mb-4'>Manual invoicing is time‑consuming and error‑prone. Our free, browser‑based invoice generator includes every field discussed in this guide — from late fee calculators to multi‑currency support. No sign‑up required, and your data never leaves your device.</p>
-<div class='bg-brand-50 border border-brand-200 rounded-xl p-6 text-center my-6'>
-  <p class='font-bold text-slate-900 text-lg'>Ready to create your invoice now?</p>
-  <a href='/#invoice-tool' class='inline-block mt-3 bg-brand-500 hover:bg-brand-600 text-white px-6 py-3 rounded-lg font-semibold transition-all shadow-sm'>Generate Invoice PDF — Free</a>
-</div>
-    </article>
+    for article in articles:
+        slug = article.get("slug")
+        if not slug:
+            continue
+        print(f"Generating rich article: {slug}")
+        html = generate_article_html(article, template)
+        out_path = os.path.join(OUTPUT_DIR, f"{slug}.html")
+        write_output(out_path, html)
 
-    <!-- Bottom CTA -->
-    <section class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
-        <div class="bg-brand-500 rounded-2xl px-6 sm:px-10 py-9 text-center">
-            <h2 class="text-2xl font-extrabold text-white tracking-tight mb-3">Build This Invoice in Under 60 Seconds</h2>
-            <p class="text-brand-50 max-w-xl mx-auto mb-6">Every field and clause covered in this guide is already built into the generator — no account, no email, nothing leaves your browser.</p>
-            <a href="/#invoice-tool" class="inline-flex items-center gap-2 bg-white hover:bg-brand-50 text-brand-700 px-6 py-3 rounded-lg font-semibold text-sm transition-all shadow-sm">
-                <i data-lucide="arrow-right" class="w-4 h-4"></i> Generate Invoice PDF — Free
-            </a>
-        </div>
-    </section>
+    print(f"✅ Generated {len(articles)} rich articles in '{OUTPUT_DIR}/'")
 
-    <!-- Related Articles -->
-    <section class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
-        <h2 class="text-xl font-bold text-slate-900 mb-5">Related Invoicing Guides</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <!-- No related articles -->
-        </div>
-    </section>
-
-    <!-- FAQ Section -->
-    
-
-    <!-- Bottom Ad -->
-    <section class="ad-slot-bottom w-full bg-slate-50 border-y border-slate-200 py-6 flex flex-col items-center justify-center mb-0">
-        <span class="text-[10px] text-slate-400 uppercase tracking-wider mb-2">Advertisement</span>
-        <div class="ad-unit bg-slate-200 flex items-center justify-center text-slate-400 text-sm rounded">
-            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="XXXXXXXXXX" data-ad-format="auto" data-full-width-responsive="true"></ins>
-            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="w-full bg-slate-900 text-slate-400 py-12 px-6">
-        <div class="max-w-7xl mx-auto flex flex-col gap-8">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
-                <a href="/" class="flex items-center gap-2 text-white">
-                    <i data-lucide="zap" class="w-6 h-6 text-brand-500 fill-brand-500"></i>
-                    <span class="font-bold text-xl tracking-tight">GetInvoicePDF<span class="text-brand-500">.com</span></span>
-                </a>
-                <div class="flex gap-6 text-sm font-medium">
-                    <a href="/blog/" class="hover:text-white transition-colors">Invoicing Guides</a>
-                    <a href="/#contact" class="hover:text-white transition-colors">Contact</a>
-                    <a href="/#privacy" class="hover:text-white transition-colors">Privacy Policy</a>
-                    <a href="/#terms" class="hover:text-white transition-colors">Terms of Service</a>
-                </div>
-            </div>
-            <p class="text-sm max-w-2xl text-center md:text-left text-slate-500">
-                GetInvoicePDF.com is a free, browser-based invoice generator built for freelancers, consultants, and small business owners. All processing happens entirely on your device — we never store, transmit, or access your invoice data.
-            </p>
-            <div class="border-t border-slate-800 pt-8 text-sm text-center md:text-left flex flex-col md:flex-row justify-between items-center gap-4">
-                <span>&copy; 2026 GetInvoicePDF.com &middot; Built for freelancers, by freelancers &middot; All rights reserved.</span>
-            </div>
-        </div>
-    </footer>
-
-    <script>
-        document.querySelectorAll('.faq-trigger').forEach(function (btn) {
-            btn.addEventListener('click', function () {
-                const body = btn.nextElementSibling;
-                const icon = btn.querySelector('svg.lucide-chevron-down') || btn.querySelector('[data-lucide="chevron-down"]');
-                const isOpen = body.style.maxHeight && body.style.maxHeight !== '0px';
-                if (isOpen) {
-                    body.style.maxHeight = '0px';
-                    if (icon) icon.style.transform = 'rotate(0deg)';
-                } else {
-                    body.style.maxHeight = body.scrollHeight + 'px';
-                    if (icon) icon.style.transform = 'rotate(180deg)';
-                }
-            });
-        });
-        if (window.lucide) lucide.createIcons();
-        document.addEventListener('DOMContentLoaded', function () {
-            if (window.lucide) lucide.createIcons();
-        });
-    </script>
-</body>
-</html>
+if __name__ == "__main__":
+    main()
