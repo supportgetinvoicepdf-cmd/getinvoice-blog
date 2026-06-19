@@ -3,8 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- Build tokens are replaced by generate_blog.py -->
     <title>{{ARTICLE_TITLE}} | GetInvoicePDF.com</title>
     <meta name="description" content="{{META_DESCRIPTION}}">
     <link rel="canonical" href="https://www.getinvoicepdf.com/blog/{{CANONICAL_SLUG}}/">
@@ -106,7 +104,6 @@
         .faq-body, .accordion-body { transition: max-height 0.3s ease-in-out; }
         .lucide-chevron-down { transition: transform 0.3s ease-in-out; }
 
-        /* CLS protection for ads */
         .ad-slot-leaderboard { min-height: 90px; }
         .ad-slot-leaderboard .ad-unit { min-width: 320px; min-height: 50px; }
         @media (min-width: 768px) { .ad-slot-leaderboard .ad-unit { min-width: 728px; min-height: 90px; } }
@@ -183,7 +180,6 @@
     <!-- Article Body -->
     <article class="seo-article max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-4">
         <!-- BUILD:ARTICLE_BODY -->
-        <!-- Article content inserted here -->
         <!-- /BUILD:ARTICLE_BODY -->
     </article>
 
@@ -266,7 +262,6 @@
     </footer>
 
     <script>
-        // FAQ accordion
         document.querySelectorAll('.faq-trigger').forEach(function (btn) {
             btn.addEventListener('click', function () {
                 const body = btn.nextElementSibling;
