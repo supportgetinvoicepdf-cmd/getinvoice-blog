@@ -1,0 +1,330 @@
+{
+  "categories": [
+    {
+      "key": "core",
+      "label": "Invoicing Fundamentals & Compliance"
+    },
+    {
+      "key": "late",
+      "label": "Late Payments & Collections"
+    },
+    {
+      "key": "creative",
+      "label": "Creative & Media Freelancers"
+    },
+    {
+      "key": "tech",
+      "label": "Tech, Dev & Digital Services"
+    },
+    {
+      "key": "pro",
+      "label": "Professional & Advisory Services"
+    },
+    {
+      "key": "trades",
+      "label": "Trades, Construction & Logistics"
+    },
+    {
+      "key": "niche",
+      "label": "Health, Events & Specialty Services"
+    }
+  ],
+  "articles": [
+    {
+      "n": 1,
+      "slug": "invoice-template-freelance-designer-tax",
+      "cat": "creative",
+      "title": "Free Invoice Template for Freelance Designer with Tax \u2014 The Complete Billing Guide",
+      "kw": "invoice template for freelance designer with tax",
+      "excerpt": "Generic invoice templates fail designers because branding work doesn't break into clean, undisputable units the way an hourly consulting session does. This guide gives you the exact line-item structure, revision-round documentation, and state-by-state sales tax rules that keep design invoices from getting questioned, or paid late."
+    },
+    {
+      "n": 2,
+      "slug": "late-payment-fee-calculator",
+      "cat": "late",
+      "title": "Late Payment Fee Calculator for Freelance Invoices \u2014 How to Calculate, Apply, and Enforce Payment Penalties",
+      "kw": "late payment fee calculator freelance invoice",
+      "excerpt": "A late fee clause that just says \"1.5% per month\" means nothing without a formula a client can actually verify. This guide breaks down the exact US, UK, and EU calculation methods, plus the contract language that makes your penalty enforceable instead of ignorable."
+    },
+    {
+      "n": 3,
+      "slug": "commercial-invoice-template-late-fee-terms",
+      "cat": "core",
+      "title": "Commercial Invoice Template with Late Fee Terms Pre-Written \u2014 For Corporate and Agency Billing",
+      "kw": "commercial invoice template with late fee terms",
+      "excerpt": "Corporate accounts payable teams need PO numbers, vendor codes, and Net-30 language that freelance invoices usually skip entirely. This template pre-writes jurisdiction-compliant late fee clauses directly into a B2B-ready format so you're never drafting legal terms from scratch."
+    },
+    {
+      "n": 4,
+      "slug": "freelance-writer-copywriter-invoice",
+      "cat": "creative",
+      "title": "How to Invoice as a Freelance Writer or Copywriter \u2014 Milestone Billing, Kill Fees, and Tax",
+      "kw": "how to invoice as a freelance writer",
+      "excerpt": "Per-word, per-project, and retainer billing each demand a different invoice structure, and most writers default to whichever one disputes them fastest. This guide covers milestone splits for long-form projects, kill fee clauses for cancelled work, and licensing fees for ghostwritten content."
+    },
+    {
+      "n": 5,
+      "slug": "invoice-overdue-reminder-letter-template",
+      "cat": "late",
+      "title": "Invoice Overdue Reminder Letter Template with Late Fee \u2014 From Polite Follow-Up to Formal Demand",
+      "kw": "invoice overdue reminder letter template with late fee",
+      "excerpt": "Most unpaid invoices aren't ignored out of malice, they're ignored because the first reminder was either too soft or too aggressive. This three-stage follow-up system gives you exact wording for the Day-1 nudge, the Day-7 firm notice, and the Day-30 formal demand letter."
+    },
+    {
+      "n": 6,
+      "slug": "web-developer-invoice-template",
+      "cat": "tech",
+      "title": "Hourly vs Project-Based Web Developer Invoice Template \u2014 The Complete Billing Guide for Freelance Programmers",
+      "kw": "web developer invoice template",
+      "excerpt": "Developers get underpaid by either absorbing scope overruns on fixed-price work or billing hourly without time-tracking discipline clients can dispute. This guide separates the two billing models completely, down to repository handover clauses and infrastructure cost pass-throughs."
+    },
+    {
+      "n": 7,
+      "slug": "freelance-photographer-invoice-template",
+      "cat": "creative",
+      "title": "Freelance Photographer Invoice Template with Image Licensing Rights \u2014 Commercial, Editorial, and Print Billing",
+      "kw": "freelance photographer invoice template",
+      "excerpt": "A photography invoice has to separate the shoot fee from the licensing fee, and most templates collapse the two into one dangerously vague line. This guide shows exactly how to itemize usage rights by medium, territory, and duration so commercial clients can't claim more than they paid for."
+    },
+    {
+      "n": 8,
+      "slug": "video-editor-invoice-template",
+      "cat": "creative",
+      "title": "Video Editor Invoice Template \u2014 Tracking Post-Production Hours, Revision Fees, and Hard Drive Deliveries",
+      "kw": "video editor invoice template",
+      "excerpt": "One hour of raw footage can take six to ten hours to edit, which makes flat-rate billing a quiet way to lose money on every project. This template breaks editing into offline cut, color, audio, and motion graphics line items, plus a revision log for billable extra rounds."
+    },
+    {
+      "n": 9,
+      "slug": "consultant-invoice-template-retainer",
+      "cat": "pro",
+      "title": "Professional Consultant Invoice Template with Retainer Terms \u2014 Advisory Billing, Expense Auditing, and Monthly Recurring Structures",
+      "kw": "consultant invoice template with retainer",
+      "excerpt": "Consulting invoices get audited harder than almost any other freelance category because clients are paying for thinking, not a visible deliverable. This guide covers day-rate documentation, audit-proof expense formatting, and the rollover rules that keep a retainer from becoming unlimited hours."
+    },
+    {
+      "n": 10,
+      "slug": "freelance-translator-invoice-template",
+      "cat": "pro",
+      "title": "Freelance Translator Invoice Template \u2014 Per-Word vs Per-Hour Billing, Specialist Rates, and Cross-Border Currency",
+      "kw": "freelance translator invoice template",
+      "excerpt": "Source word count and target word count rarely match, and that gap alone causes more translator billing disputes than any other line item. This guide covers per-word and per-hour formats side by side, plus certification language required for sworn translation invoices."
+    },
+    {
+      "n": 11,
+      "slug": "milestone-payment-invoice-guide",
+      "cat": "core",
+      "title": "How to Structure a Milestone Payment Invoice for Long-Term Contracts",
+      "kw": "milestone payment invoice",
+      "excerpt": "A long-term contract without a milestone billing structure quietly turns you into an interest-free lender to your own client. This guide maps project phases to objective, undisputable invoice triggers and shows how to size deposits so your working capital is never at risk."
+    },
+    {
+      "n": 12,
+      "slug": "proforma-invoice-vs-commercial-invoice",
+      "cat": "core",
+      "title": "Proforma Invoice vs Commercial Invoice \u2014 When to Use Each",
+      "kw": "proforma invoice vs commercial invoice",
+      "excerpt": "Sending a proforma invoice when you actually mean to get paid is one of the most common, and costly, billing mistakes freelancers make. This guide draws the legal line between the two documents and explains exactly when each one belongs in your workflow."
+    },
+    {
+      "n": 13,
+      "slug": "international-client-invoice-no-hidden-fees",
+      "cat": "core",
+      "title": "How to Invoice an International Client Without Hidden Bank Fees",
+      "kw": "international client invoice",
+      "excerpt": "Intermediary bank fees can quietly eat 1 to 3 percent of every international wire before it reaches your account, and most freelancers never trace where the money went. This guide decodes SWIFT routing, currency timing, and the clauses that put exchange-rate risk where it belongs."
+    },
+    {
+      "n": 14,
+      "slug": "unique-sequential-invoice-number",
+      "cat": "core",
+      "title": "What Is a Unique Sequential Invoice Number and Why It Matters",
+      "kw": "invoice numbering system",
+      "excerpt": "An invoice without a unique sequential number isn't just unprofessional, in many jurisdictions it isn't a valid tax document at all. This guide covers numbering formats that scale, and exactly how to fix gaps or duplicates without breaking your audit trail."
+    },
+    {
+      "n": 15,
+      "slug": "retainer-invoice-template",
+      "cat": "core",
+      "title": "Retainer Invoice Template \u2014 How to Bill for Recurring Services",
+      "kw": "retainer invoice template",
+      "excerpt": "Monthly retainers fail when rollover hours, scope creep, and renewal terms are left undefined until a client disputes them. This guide gives you exact retainer invoice mechanics, from billing date to \"use it or lose it\" clauses, that keep recurring revenue actually predictable."
+    },
+    {
+      "n": 16,
+      "slug": "marketing-agency-invoice-template",
+      "cat": "tech",
+      "title": "Digital Marketing Agency Invoice Template \u2014 Retainers and Performance Bonuses",
+      "kw": "marketing agency invoice template",
+      "excerpt": "A single agency invoice often blends a management fee, pass-through ad spend, and a performance bonus, three financial relationships that confuse finance teams when compressed into one line. This guide shows how to separate each component so your invoice clears procurement on the first pass."
+    },
+    {
+      "n": 17,
+      "slug": "virtual-assistant-invoice-template",
+      "cat": "tech",
+      "title": "Virtual Assistant Invoice Template \u2014 Tracking Administrative Hours and Tasks",
+      "kw": "virtual assistant invoice template",
+      "excerpt": "Cross-time-zone hour tracking and a long list of small recurring tasks make VA billing easy to dispute if it isn't itemized clearly. This guide covers the exact line-item format for administrative hours, tool subscriptions, and fractional retainer billing."
+    },
+    {
+      "n": 18,
+      "slug": "handyman-invoice-template",
+      "cat": "trades",
+      "title": "Independent Contractor and Handyman Invoice Template \u2014 Materials vs Labor",
+      "kw": "handyman invoice template",
+      "excerpt": "Mixing material costs into your hourly labor rate makes it impossible for a client to verify what they're actually paying for. This guide separates materials, labor, and local sales tax into a job-site invoice format that survives scrutiny."
+    },
+    {
+      "n": 19,
+      "slug": "invoice-dispute-resolution-guide",
+      "cat": "core",
+      "title": "How to Handle an Invoice Dispute Professionally Without Going to Court",
+      "kw": "invoice dispute",
+      "excerpt": "Most invoice disputes aren't really about the money, they're about an unclear scope that gave the client room to argue. This guide walks through the documentation and settlement steps that resolve billing disagreements before they ever reach small claims court."
+    },
+    {
+      "n": 20,
+      "slug": "paid-invoice-receipt-guide",
+      "cat": "core",
+      "title": "The Anatomy of a Paid Invoice Receipt \u2014 What to Issue After Payment",
+      "kw": "paid invoice receipt",
+      "excerpt": "An invoice and a receipt are not the same document, and issuing only one of them creates a gap in your client's proof-of-payment trail. This guide covers exactly what a compliant paid receipt must include for tax audits and expense reimbursement."
+    },
+    {
+      "n": 21,
+      "slug": "ecommerce-vendor-invoice-template",
+      "cat": "trades",
+      "title": "E-commerce Vendor Invoice Template \u2014 Wholesale, Drop-shipping, and Bulk Order Logistics",
+      "kw": "e-commerce invoice template",
+      "excerpt": "At wholesale volume, a generic invoice template collapses under eighty SKUs, three cost categories, and a payment timeline that doesn't match when goods actually arrive. This guide builds a two-tier line-item structure for procurement teams and customs review."
+    },
+    {
+      "n": 22,
+      "slug": "freight-logistics-invoice-template",
+      "cat": "trades",
+      "title": "Freight and Logistics Invoice Template \u2014 Customs, Fuel Surcharges, and Bill of Lading",
+      "kw": "freight invoice template",
+      "excerpt": "Freight invoices live or die on whether every surcharge can be traced back to a Bill of Lading and a documented fuel index. This guide covers the exact line items customs brokers and shippers expect, and how to avoid disputes over variable fuel costs."
+    },
+    {
+      "n": 23,
+      "slug": "nonprofit-ngo-invoice-template",
+      "cat": "niche",
+      "title": "Non-Profit and NGO Invoice Template \u2014 Grant Allocation and Donor Reports",
+      "kw": "non-profit invoice template",
+      "excerpt": "Grant-funded invoices need to show exactly which funding source paid for which line item, or your organization risks failing its next compliance audit. This guide covers tax-exempt invoicing mechanics and the donor-reporting layout grant administrators expect."
+    },
+    {
+      "n": 24,
+      "slug": "rental-property-equipment-invoice",
+      "cat": "niche",
+      "title": "How to Write an Invoice for Rental Property or Equipment Leasing",
+      "kw": "rental invoice template",
+      "excerpt": "Security deposits, prorated periods, and recurring lease charges all behave differently from a standard service invoice. This guide separates rent, deposits, and equipment charges into a leasing invoice format that holds up under review."
+    },
+    {
+      "n": 25,
+      "slug": "estimate-vs-quote-vs-invoice",
+      "cat": "core",
+      "title": "The Difference Between an Estimate, a Quote, and a Final Commercial Invoice",
+      "kw": "estimate vs quote vs invoice",
+      "excerpt": "Sending a \"quote\" when you legally meant a binding estimate, or an estimate when you meant an invoice, creates real confusion about what a client actually owes. This guide draws a clean legal line between all three documents and shows how to convert one into the next."
+    },
+    {
+      "n": 26,
+      "slug": "construction-subcontractor-invoice-template",
+      "cat": "trades",
+      "title": "Construction and Subcontractor Invoice Template \u2014 Progress Billing and Retainage",
+      "kw": "construction invoice template",
+      "excerpt": "Construction billing runs on a Schedule of Values, not a simple line item, and a single overstated percentage-complete figure compounds through every draw request that follows. This guide covers progress billing mechanics and the draw request format that clears approval."
+    },
+    {
+      "n": 27,
+      "slug": "personal-trainer-invoice-template",
+      "cat": "niche",
+      "title": "Personal Trainer and Fitness Coach Invoice Template \u2014 Package Sessions and Expiry Terms",
+      "kw": "personal trainer invoice template",
+      "excerpt": "Session packages create a billing problem most generic templates ignore entirely: what happens when a client doesn't use every session before expiry? This guide covers package itemization, non-refundable cancellation policy language, and multi-client billing."
+    },
+    {
+      "n": 28,
+      "slug": "attorney-legal-invoice-template",
+      "cat": "pro",
+      "title": "Legal Services and Attorney Invoice Template \u2014 Billable Hours and Trust Retainers",
+      "kw": "attorney invoice template",
+      "excerpt": "Mixing operating invoices with trust account retainers is a compliance risk most attorneys don't realize their invoice format is creating. This guide covers tenth-of-an-hour billing precision and the exact separation required between fee invoices and trust fund activity."
+    },
+    {
+      "n": 29,
+      "slug": "medical-healthcare-invoice-template",
+      "cat": "niche",
+      "title": "Medical and Healthcare Provider Invoice Template \u2014 Superbills and Insurance Claims",
+      "kw": "medical invoice template",
+      "excerpt": "A private practice superbill needs CPT and ICD-10 codes formatted precisely, or a patient's insurance reimbursement claim gets rejected before it's even reviewed. This guide covers the exact superbill layout that satisfies patients and insurance processors alike."
+    },
+    {
+      "n": 30,
+      "slug": "illustration-commission-invoice-template",
+      "cat": "creative",
+      "title": "Art and Illustration Commission Invoice Template \u2014 Commercial Rights and Deposits",
+      "kw": "illustration commission invoice",
+      "excerpt": "Commission invoices need to separate the sketch milestone from the final-color milestone, and the artwork fee from the usage rights fee. This guide covers deposit sizing and global digital usage rights language for illustrators."
+    },
+    {
+      "n": 31,
+      "slug": "event-planner-wedding-invoice-template",
+      "cat": "niche",
+      "title": "Event Planner and Wedding Coordinator Invoice Template \u2014 Vendor Passthroughs and Retainers",
+      "kw": "event planner invoice template",
+      "excerpt": "Event invoices blend a planning retainer with pass-through vendor costs that aren't really yours, caterers, florists, venues, and conflating the two creates markup disputes. This guide covers non-refundable date-hold deposits and clean vendor passthrough formatting."
+    },
+    {
+      "n": 32,
+      "slug": "saas-subscription-invoice-template",
+      "cat": "tech",
+      "title": "SaaS and Software Subscription Invoice Template \u2014 Recurring Billing, Proration, and Plan Upgrades",
+      "kw": "saas subscription invoice template",
+      "excerpt": "A mid-cycle plan upgrade or seat change creates a prorated charge that most invoice templates can't explain clearly to a finance team. This guide covers recurring billing line items, proration math, and renewal-date language that keeps SaaS invoices dispute-free."
+    },
+    {
+      "n": 33,
+      "slug": "tattoo-artist-invoice-template",
+      "cat": "creative",
+      "title": "Tattoo Artist and Piercer Invoice Template \u2014 Deposits, Touch-Up Policies, and Studio Booth Rent",
+      "kw": "tattoo artist invoice template",
+      "excerpt": "Tattoo studios run on non-refundable deposits and free touch-up windows that a generic invoice template has no language for. This guide covers deposit forfeiture clauses and how to document a complimentary touch-up versus a new paid session."
+    },
+    {
+      "n": 34,
+      "slug": "real-estate-commission-invoice-template",
+      "cat": "pro",
+      "title": "Real Estate Agent Commission Invoice Template \u2014 Closing Statements and Co-Broker Splits",
+      "kw": "real estate commission invoice template",
+      "excerpt": "Commission invoices need to reconcile against the closing statement and show exactly how a co-broker split was calculated, or brokerages bounce them back. This guide covers commission line-item formatting tied to the actual closing date."
+    },
+    {
+      "n": 35,
+      "slug": "catering-event-invoice-template",
+      "cat": "niche",
+      "title": "Catering and Event Food Service Invoice Template \u2014 Headcount Changes and Gratuity Lines",
+      "kw": "catering invoice template",
+      "excerpt": "A final guest headcount that changes 48 hours before an event throws off every per-plate calculation unless your template accounts for it upfront. This guide covers headcount adjustment clauses and service charge versus gratuity lines."
+    },
+    {
+      "n": 36,
+      "slug": "it-support-managed-services-invoice-template",
+      "cat": "tech",
+      "title": "IT Support and Managed Services Invoice Template \u2014 SLA Tiers and Per-Device Billing",
+      "kw": "it support invoice template",
+      "excerpt": "Managed service providers bill against SLA tiers and per-device counts that fluctuate monthly, making a static invoice template nearly useless within a quarter. This guide covers tiered SLA line items and emergency out-of-hours rate documentation."
+    },
+    {
+      "n": 37,
+      "slug": "pet-grooming-dog-walking-invoice-template",
+      "cat": "niche",
+      "title": "Pet Grooming and Dog Walking Invoice Template \u2014 Recurring Packages and Multi-Pet Discounts",
+      "kw": "pet grooming invoice template",
+      "excerpt": "Recurring walking schedules and multi-pet households create discount math most invoice templates don't have a clean line item for. This guide covers package session tracking and late cancellation fee language for pet care providers."
+    }
+  ]
+}
