@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- ============================================================
+         BUILD PIPELINE CONTRACT — read this before editing markers below
+         This file is consumed by build-blog.yml / build_blog.py, NOT hand-edited
+         per article. Two replacement mechanisms are used:
+
+         1) SIMPLE TOKENS — plain find/replace, sourced from articles-data.json:
+            {{ARTICLE_TITLE}}, {{META_DESCRIPTION}}, {{CANONICAL_SLUG}},
+            {{ARTICLE_H1}}, {{ARTICLE_DEK}}, {{MODIFIED_DATE_DISPLAY}},
+            {{READ_TIME}}, {{FAQ_INTRO_LINE}}
+
+         2) BLOCK MARKERS — <!-- BUILD:NAME --> ... <!-- /BUILD:NAME -->
+            regions the script replaces wholesale (regenerated JSON-LD,
+            looped FAQ items, looped related cards, full article body):
+            BUILD:JSONLD_ARTICLE, BUILD:JSONLD_BREADCRUMB, BUILD:JSONLD_FAQ,
+            BUILD:ARTICLE_BODY, BUILD:FAQ_SECTION, BUILD:FAQ_ITEM,
+            BUILD:RELATED_CARD
+
+         Do not delete a BUILD comment pair without updating build_blog.py —
+         the script searches for these exact markers and fails the build
+         loudly if one is missing, rather than silently skipping it.
+         ============================================================ -->
+
+    <title>{{ARTICLE_TITLE}} | GetInvoicePDF.com</title>
+    <meta name="description" content="{{META_DESCRIPTION}}">
+    <link rel="canonical" href="https://www.getinvoicepdf.com/blog/{{CANONICAL_SLUG}}/">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="{{ARTICLE_TITLE}} | GetInvoicePDF.com">
+    <meta property="og:description" content="{{META_DESCRIPTION}}">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://www.getinvoicepdf.com/blog/{{CANONICAL_SLUG}}/">
+    <meta property="og:image" content="/og-image.png">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        brand: { 50:'#f5f3ff', 100:'#ede9fe', 500:'#7c3aed', 600:'#6d28d9', 700:'#5b21b6', 900:'#2e1065' }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest" defer></script>
+
+    <!-- =================== JSON-LD: Article Schema =================== -->
+    <!-- BUILD:JSONLD_ARTICLE -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "{{ARTICLE_TITLE}}",
+      "description": "{{META_DESCRIPTION}}",
+      "image": "https://www.getinvoicepdf.com/og-image.png",
+      "datePublished": "{{PUBLISH_DATE_ISO}}",
+      "dateModified": "{{MODIFIED_DATE_ISO}}",
+      "author": {
+        "@type": "Organization",
+        "name": "GetInvoicePDF.com",
+        "url": "https://www.getinvoicepdf.com"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "GetInvoicePDF.com",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://www.getinvoicepdf.com/logo.png"
+        }
+      },
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://www.getinvoicepdf.com/blog/{{CANONICAL_SLUG}}/"
+      }
+    }
+    </script>
+    <!-- /BUILD:JSONLD_ARTICLE -->
+
+    <!-- =================== JSON-LD: Breadcrumb =================== -->
+    <!-- BUILD:JSONLD_BREADCRUMB -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.getinvoicepdf.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Invoicing Guides", "item": "https://www.getinvoicepdf.com/blog/" },
+        { "@type": "ListItem", "position": 3, "name": "{{ARTICLE_TITLE}}", "item": "https://www.getinvoicepdf.com/blog/{{CANONICAL_SLUG}}/" }
+      ]
+    }
+    </script>
+    <!-- /BUILD:JSONLD_BREADCRUMB -->
+
+    <!-- =================== JSON-LD: FAQPage ===================
+         Regenerated entirely by build_blog.py from the article's "faq" list
+         in articles-data.json. If an article has no faq data, this whole
+         block is stripped — an FAQPage schema with placeholder/dummy
+         questions is worse than no FAQPage schema at all. -->
+    <!-- BUILD:JSONLD_FAQ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "{{FAQ_1_QUESTION}}",
+          "acceptedAnswer": { "@type": "Answer", "text": "{{FAQ_1_ANSWER}}" }
+        }
+      ]
+    }
+    </script>
+    <!-- /BUILD:JSONLD_FAQ -->
+
+    <style>
+        html { scroll-behavior: smooth; }
+        .faq-body, .accordion-body { transition: max-height 0.3s ease-in-out; }
+        .lucide-chevron-down { transition: transform 0.3s ease-in-out; }
+
+        /* ============================================================
+           AD SLOT RESERVATION — CLS PROTECTION
+           Every ad container below has a fixed min-height/min-width
+           BEFORE any AdSense script loads. This reserves layout space
+           so injected ads never shift content and never tank CLS.
+           Do not remove these min-height/min-width rules even after
+           pasting in real <ins class="adsbygoogle"> tags.
+           ============================================================ */
+        .ad-slot-leaderboard { min-height: 90px; }
+        .ad-slot-leaderboard .ad-unit { min-width: 320px; min-height: 50px; }
+        @media (min-width: 768px) { .ad-slot-leaderboard .ad-unit { min-width: 728px; min-height: 90px; } }
+
+        .ad-slot-native { min-height: 280px; }
+        .ad-slot-native .ad-unit { min-width: 300px; min-height: 250px; }
+
+        .ad-slot-bottom { min-height: 250px; }
+        .ad-slot-bottom .ad-unit { min-width: 320px; min-height: 100px; }
+        @media (min-width: 768px) { .ad-slot-bottom .ad-unit { min-width: 728px; min-height: 90px; } }
+
+        .ad-slot-sticky-mobile {
+            position: sticky; bottom: 0; z-index: 40; min-height: 60px;
+        }
+        .ad-slot-sticky-mobile .ad-unit { min-width: 320px; min-height: 50px; }
+    </style>
+</head>
+<body class="bg-white text-slate-600 font-sans antialiased selection:bg-brand-100 selection:text-brand-900">
+
+    <!-- ============== NAVIGATION BAR (matches main tool exactly) ============== -->
+    <nav class="w-full bg-white/90 backdrop-blur-sm border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <a href="/" class="flex items-center gap-2">
+                <i data-lucide="zap" class="w-6 h-6 text-brand-500 fill-brand-500"></i>
+                <span class="font-bold text-xl text-slate-900 tracking-tight">GetInvoicePDF<span class="text-brand-500">.com</span></span>
+            </a>
+            <a href="/#invoice-tool" class="bg-brand-500 hover:bg-brand-600 text-white px-4 py-2 rounded-lg font-medium text-sm transition-all shadow-sm flex items-center gap-2">
+                <span class="hidden sm:inline">Generate Invoice PDF</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </a>
+        </div>
+    </nav>
+
+    <!-- ============== AD SLOT 1: LEADERBOARD — BELOW NAV / ABOVE BREADCRUMB ============== -->
+    <div class="ad-slot-leaderboard w-full bg-slate-50 border-b border-slate-200 flex flex-col items-center justify-center py-2">
+        <span class="text-[10px] text-slate-400 uppercase tracking-wider mb-1">Advertisement</span>
+        <div class="ad-unit bg-slate-200 flex items-center justify-center text-slate-400 text-sm rounded">
+            <!-- PASTE ADSENSE <ins> CODE HERE — container above already reserves space, no CLS risk -->
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="XXXXXXXXXX" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+    </div>
+
+    <!-- BREADCRUMB -->
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+        <nav class="text-sm text-slate-400 flex items-center gap-2 flex-wrap" aria-label="Breadcrumb">
+            <a href="/" class="hover:text-brand-600 transition-colors">Home</a>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            <a href="/blog/" class="hover:text-brand-600 transition-colors">Invoicing Guides</a>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            <span class="text-slate-600 font-medium">{{ARTICLE_TITLE}}</span>
+        </nav>
+    </div>
+
+    <!-- ============== ARTICLE HEADER / H1 ============== -->
+    <header class="w-full pt-6 pb-8 px-4 max-w-3xl mx-auto">
+        <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900 leading-tight tracking-tight">{{ARTICLE_H1}}</h1>
+        <p class="text-lg text-slate-500 mt-4 leading-relaxed">{{ARTICLE_DEK}}</p>
+        <div class="flex items-center gap-3 mt-5 text-sm text-slate-400">
+            <span class="flex items-center gap-1.5"><i data-lucide="calendar" class="w-4 h-4"></i> Updated {{MODIFIED_DATE_DISPLAY}}</span>
+            <span class="flex items-center gap-1.5"><i data-lucide="clock" class="w-4 h-4"></i> {{READ_TIME}} min read</span>
+        </div>
+    </header>
+
+    <!-- ============== TOP CTA BLOCK — HIGH-CONVERTING, ABOVE THE FOLD ============== -->
+    <section class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+        <div class="bg-brand-50 border border-brand-100 rounded-2xl px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+                <p class="font-bold text-slate-900 text-base">Skip the manual formatting</p>
+                <p class="text-sm text-slate-600 mt-1">Generate this exact invoice structure as a PDF in under 60 seconds — free, no sign-up.</p>
+            </div>
+            <a href="/#invoice-tool" class="shrink-0 inline-flex items-center gap-2 bg-brand-500 hover:bg-brand-600 text-white px-5 py-2.5 rounded-lg font-semibold text-sm transition-all shadow-sm whitespace-nowrap">
+                Generate Invoice PDF <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         ARTICLE BODY
+         Insert the article's body content below using this exact paragraph
+         rhythm. After every 4th <p> within the article, insert one
+         in-content native ad slot (copy the .ad-slot-native block).
+         A worked 12-paragraph example is shown below — duplicate the
+         pattern for longer articles, removing the example copy.
+         ============================================================ -->
+    <article class="seo-article max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-4">
+        <!-- If articles-data.json provides "body_html" for this article, the
+             ENTIRE region below (down to /BUILD:ARTICLE_BODY) is replaced with
+             that pre-rendered HTML. If not, this worked 12-paragraph example
+             is left as-is — its {{PARAGRAPH_n}} / {{H2_...}} tokens will then
+             be caught by the leftover-placeholder scanner and the build will
+             fail loudly for this article instead of publishing raw tokens. -->
+        <!-- BUILD:ARTICLE_BODY -->
+
+        <h2 class="text-2xl font-bold text-slate-900 mt-2 mb-3 border-l-4 border-brand-500 pl-4">{{H2_SECTION_1_HEADING}}</h2>
+        <p class="text-slate-600 leading-relaxed mb-4">{{PARAGRAPH_1}}</p>
+        <p class="text-slate-600 leading-relaxed mb-4">{{PARAGRAPH_2}}</p>
+        <p class="text-slate-600 leading-relaxed mb-4">{{PARAGRAPH_3}}</p>
+        <p class="text-slate-600 leading-relaxed mb-4">{{PARAGRAPH_4}}</p>
+
+        <!-- ============== AD SLOT 2: IN-CONTENT NATIVE — AFTER PARAGRAPH 4 ============== -->
+        <div class="ad-slot-native w-full bg-slate-50 border border-slate-200 rounded-xl flex flex-col items-center justify-center my-8 py-4">
+            <span class="text-[10px] text-slate-400 uppercase tracking-wider mb-2">Advertisement</span>
+            <div class="ad-unit bg-slate-200 flex items-center justify-center text-slate-400 text-sm rounded">
+                <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="XXXXXXXXXX" data-ad-format="fluid" data-ad-layout-key="-fb+5w+4e-db+86"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+        </div>
+
+        <h2 class="text-2xl font-bold text-slate-900 mt-2 mb-3 border-l-4 border-brand-500 pl-4">{{H2_SECTION_2_HEADING}}</h2>
+        <h3 class="text-lg font-semibold text-slate-800 mt-6 mb-2">{{H3_SECTION_2A_HEADING}}</h3>
+        <p class="text-slate-600 leading-relaxed mb-4">{{PARAGRAPH_5}}</p>
+        <p class="text-slate-600 leading-relaxed mb-4">{{PARAGRAPH_6}}</p>
+        <h3 class="text-lg font-semibold text-slate-800 mt-6 mb-2">{{H3_SECTION_2B_HEADING}}</h3>
+        <p class="text-slate-600 leading-relaxed mb-4">{{PARAGRAPH_7}}</p>
+        <p class="text-slate-600 leading-relaxed mb-4">{{PARAGRAPH_8}}</p>
+
+        <!-- ============== AD SLOT 3: IN-CONTENT NATIVE — AFTER PARAGRAPH 8 ============== -->
+        <div class="ad-slot-native w-full bg-slate-50 border border-slate-200 rounded-xl flex flex-col items-center justify-center my-8 py-4">
+            <span class="text-[10px] text-slate-400 uppercase tracking-wider mb-2">Advertisement</span>
+            <div class="ad-unit bg-slate-200 flex items-center justify-center text-slate-400 text-sm rounded">
+                <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="XXXXXXXXXX" data-ad-format="fluid" data-ad-layout-key="-fb+5w+4e-db+86"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+        </div>
+
+        <h2 class="text-2xl font-bold text-slate-900 mt-2 mb-3 border-l-4 border-brand-500 pl-4">{{H2_SECTION_3_HEADING}}</h2>
+        <p class="text-slate-600 leading-relaxed mb-4">{{PARAGRAPH_9}}</p>
+        <p class="text-slate-600 leading-relaxed mb-4">{{PARAGRAPH_10}}</p>
+        <p class="text-slate-600 leading-relaxed mb-4">{{PARAGRAPH_11}}</p>
+        <p class="text-slate-600 leading-relaxed mb-4">{{PARAGRAPH_12}}</p>
+
+        <!-- ============== AD SLOT 4: IN-CONTENT NATIVE — AFTER PARAGRAPH 12 ============== -->
+        <div class="ad-slot-native w-full bg-slate-50 border border-slate-200 rounded-xl flex flex-col items-center justify-center my-8 py-4">
+            <span class="text-[10px] text-slate-400 uppercase tracking-wider mb-2">Advertisement</span>
+            <div class="ad-unit bg-slate-200 flex items-center justify-center text-slate-400 text-sm rounded">
+                <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="XXXXXXXXXX" data-ad-format="fluid" data-ad-layout-key="-fb+5w+4e-db+86"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+        </div>
+
+        <!-- ===========================================================
+             CONTINUE THE ARTICLE BODY HERE.
+             Repeat the H2/H3/paragraph + "ad-slot-native after every 4th
+             paragraph" pattern above until the body content is exhausted.
+             Long articles (1,800+ words) will have 3–5 in-content slots;
+             short articles may have only 1–2. Never place two ad slots
+             back-to-back with no paragraph content between them.
+             =========================================================== -->
+
+        <h2 class="text-2xl font-bold text-slate-900 mt-2 mb-3 border-l-4 border-brand-500 pl-4">{{H2_FINAL_SECTION_HEADING}}</h2>
+        <p class="text-slate-600 leading-relaxed mb-4">{{CLOSING_PARAGRAPH}}</p>
+        <!-- /BUILD:ARTICLE_BODY -->
+
+    </article>
+
+    <!-- ============== BOTTOM CTA BLOCK — END OF ARTICLE, HIGH-CONVERTING ============== -->
+    <section class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
+        <div class="bg-brand-500 rounded-2xl px-6 sm:px-10 py-9 text-center">
+            <h2 class="text-2xl font-extrabold text-white tracking-tight mb-3">Build This Invoice in Under 60 Seconds</h2>
+            <p class="text-brand-50 max-w-xl mx-auto mb-6">Every field and clause covered in this guide is already built into the generator — no account, no email, nothing leaves your browser.</p>
+            <a href="/#invoice-tool" class="inline-flex items-center gap-2 bg-white hover:bg-brand-50 text-brand-700 px-6 py-3 rounded-lg font-semibold text-sm transition-all shadow-sm">
+                <i data-lucide="arrow-right" class="w-4 h-4"></i> Generate Invoice PDF — Free
+            </a>
+        </div>
+    </section>
+
+    <!-- ============== RELATED ARTICLES / CONTEXTUAL INTERLINKS ============== -->
+    <section class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+        <h2 class="text-xl font-bold text-slate-900 mb-5">Related Invoicing Guides</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <!-- Repeated once per related article. Source: explicit "related"
+                 override in articles-data.json, or auto-derived from the
+                 lateral-link table in interlinking-map.md keyed by "n". -->
+            <!-- BUILD:RELATED_CARD -->
+            <a href="/blog/{{RELATED_SLUG}}/" class="block bg-white border border-slate-200 rounded-xl p-4 hover:border-brand-300 hover:shadow-md transition-all">
+                <span class="text-[11px] font-semibold text-brand-600 uppercase tracking-wide">Related Guide</span>
+                <p class="text-sm font-bold text-slate-900 mt-1 leading-snug">{{RELATED_TITLE}}</p>
+            </a>
+            <!-- /BUILD:RELATED_CARD -->
+        </div>
+    </section>
+
+    <!-- ============== FAQ SECTION (accordion — matches main tool pattern) ==============
+         Stripped entirely (this section + the FAQPage JSON-LD above) if the
+         article has no "faq" data — an empty or single-dummy-question FAQ
+         section is worse than no FAQ section. ============== -->
+    <!-- BUILD:FAQ_SECTION -->
+    <section class="faq-section max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+        <h2 class="text-2xl font-bold text-slate-900 mb-2">Frequently Asked Questions</h2>
+        <p class="text-slate-500 mb-4">{{FAQ_INTRO_LINE}}</p>
+        <div class="faq-list divide-y divide-slate-200 border-t border-slate-200">
+
+            <!-- BUILD:FAQ_ITEM -->
+            <div class="faq-item border-b border-slate-200">
+                <button class="faq-trigger w-full flex justify-between items-center py-4 text-left font-semibold text-slate-800 hover:text-brand-600 transition-colors">
+                    <span class="font-semibold text-slate-800 text-left text-base">{{FAQ_QUESTION}}</span>
+                    <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 shrink-0"></i>
+                </button>
+                <div class="faq-body max-h-0 overflow-hidden">
+                    <p class="text-slate-600 pb-4 leading-relaxed">{{FAQ_ANSWER}}</p>
+                </div>
+            </div>
+            <!-- /BUILD:FAQ_ITEM -->
+
+        </div>
+    </section>
+    <!-- /BUILD:FAQ_SECTION -->
+
+    <!-- ============== AD SLOT 5: BOTTOM BANNER — ABOVE FOOTER ============== -->
+    <section class="ad-slot-bottom w-full bg-slate-50 border-y border-slate-200 py-6 flex flex-col items-center justify-center mb-0">
+        <span class="text-[10px] text-slate-400 uppercase tracking-wider mb-2">Advertisement</span>
+        <div class="ad-unit bg-slate-200 flex items-center justify-center text-slate-400 text-sm rounded">
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="XXXXXXXXXX" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+    </section>
+
+    <!-- ============== FOOTER (matches main tool exactly) ============== -->
+    <footer class="w-full bg-slate-900 text-slate-400 py-12 px-6">
+        <div class="max-w-7xl mx-auto flex flex-col gap-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                <a href="/" class="flex items-center gap-2 text-white">
+                    <i data-lucide="zap" class="w-6 h-6 text-brand-500 fill-brand-500"></i>
+                    <span class="font-bold text-xl tracking-tight">GetInvoicePDF<span class="text-brand-500">.com</span></span>
+                </a>
+                <div class="flex gap-6 text-sm font-medium">
+                    <a href="/blog/" class="hover:text-white transition-colors">Invoicing Guides</a>
+                    <a href="/#contact" class="hover:text-white transition-colors">Contact</a>
+                    <a href="/#privacy" class="hover:text-white transition-colors">Privacy Policy</a>
+                    <a href="/#terms" class="hover:text-white transition-colors">Terms of Service</a>
+                </div>
+            </div>
+            <p class="text-sm max-w-2xl text-center md:text-left text-slate-500">
+                GetInvoicePDF.com is a free, browser-based invoice generator built for freelancers, consultants, and small business owners. All processing happens entirely on your device — we never store, transmit, or access your invoice data.
+            </p>
+            <div class="border-t border-slate-800 pt-8 text-sm text-center md:text-left flex flex-col md:flex-row justify-between items-center gap-4">
+                <span>&copy; 2026 GetInvoicePDF.com &middot; Built for freelancers, by freelancers &middot; All rights reserved.</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ============== OPTIONAL: STICKY MOBILE BOTTOM AD (uncomment to enable) ==============
+    <div class="ad-slot-sticky-mobile sm:hidden w-full bg-white border-t border-slate-200 flex items-center justify-center">
+        <div class="ad-unit bg-slate-200 flex items-center justify-center text-slate-400 text-xs rounded">
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="XXXXXXXXXX" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+    </div>
+    -->
+
+    <script>
+        // FAQ accordion behavior — identical to main tool
+        document.querySelectorAll('.faq-trigger').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                const body = btn.nextElementSibling;
+                const icon = btn.querySelector('svg.lucide-chevron-down') || btn.querySelector('[data-lucide="chevron-down"]');
+                const isOpen = body.style.maxHeight && body.style.maxHeight !== '0px';
+                if (isOpen) {
+                    body.style.maxHeight = '0px';
+                    if (icon) icon.style.transform = 'rotate(0deg)';
+                } else {
+                    body.style.maxHeight = body.scrollHeight + 'px';
+                    if (icon) icon.style.transform = 'rotate(180deg)';
+                }
+            });
+        });
+
+        if (window.lucide) lucide.createIcons();
+        document.addEventListener('DOMContentLoaded', function () {
+            if (window.lucide) lucide.createIcons();
+        });
+    </script>
+</body>
+</html>
