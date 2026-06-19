@@ -4,28 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- ============================================================
-         BUILD PIPELINE CONTRACT — read this before editing markers below
-         This file is consumed by build-blog.yml / build_blog.py, NOT hand-edited
-         per article. Two replacement mechanisms are used:
-
-         1) SIMPLE TOKENS — plain find/replace, sourced from articles-data.json:
-            IT Support and Managed Services Invoice Template — SLA Tiers and Per-Device Billing, , it-support-managed-services-invoice-template,
-            IT Support and Managed Services Invoice Template — SLA Tiers and Per-Device Billing, Managed service providers bill against SLA tiers and per-device counts that fluctuate monthly, making a static invoice template nearly useless within a quarter. This guide covers tiered SLA line items and emergency out-of-hours rate documentation., June 19, 2026,
-            3, 
-
-         2) BLOCK MARKERS — <!-- BUILD:NAME --> ... <!-- /BUILD:NAME -->
-            regions the script replaces wholesale (regenerated JSON-LD,
-            looped FAQ items, looped related cards, full article body):
-            BUILD:JSONLD_ARTICLE, BUILD:JSONLD_BREADCRUMB, BUILD:JSONLD_FAQ,
-            BUILD:ARTICLE_BODY, BUILD:FAQ_SECTION, BUILD:FAQ_ITEM,
-            BUILD:RELATED_CARD
-
-         Do not delete a BUILD comment pair without updating build_blog.py —
-         the script searches for these exact markers and fails the build
-         loudly if one is missing, rather than silently skipping it.
-         ============================================================ -->
-
+    <!-- Build tokens are replaced by generate_blog.py -->
     <title>IT Support and Managed Services Invoice Template — SLA Tiers and Per-Device Billing | GetInvoicePDF.com</title>
     <meta name="description" content="">
     <link rel="canonical" href="https://www.getinvoicepdf.com/blog/it-support-managed-services-invoice-template/">
@@ -61,7 +40,6 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest" defer></script>
 
-    <!-- =================== JSON-LD: Article Schema =================== -->
     <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -69,8 +47,8 @@
   "headline": "IT Support and Managed Services Invoice Template \u2014 SLA Tiers and Per-Device Billing",
   "description": "",
   "image": "https://www.getinvoicepdf.com/og-image.png",
-  "datePublished": "2026-06-19T05:40:26.651471",
-  "dateModified": "2026-06-19T05:40:26.651471",
+  "datePublished": "2026-06-19T05:46:22.542091",
+  "dateModified": "2026-06-19T05:46:22.542091",
   "author": {
     "@type": "Organization",
     "name": "GetInvoicePDF.com",
@@ -91,7 +69,6 @@
 }
 </script>
 
-    <!-- =================== JSON-LD: Breadcrumb =================== -->
     <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -119,11 +96,6 @@
 }
 </script>
 
-    <!-- =================== JSON-LD: FAQPage ===================
-         Regenerated entirely by build_blog.py from the article's "faq" list
-         in articles-data.json. If an article has no faq data, this whole
-         block is stripped — an FAQPage schema with placeholder/dummy
-         questions is worse than no FAQPage schema at all. -->
     
 
     <style>
@@ -131,25 +103,15 @@
         .faq-body, .accordion-body { transition: max-height 0.3s ease-in-out; }
         .lucide-chevron-down { transition: transform 0.3s ease-in-out; }
 
-        /* ============================================================
-           AD SLOT RESERVATION — CLS PROTECTION
-           Every ad container below has a fixed min-height/min-width
-           BEFORE any AdSense script loads. This reserves layout space
-           so injected ads never shift content and never tank CLS.
-           Do not remove these min-height/min-width rules even after
-           pasting in real <ins class="adsbygoogle"> tags.
-           ============================================================ */
+        /* CLS protection for ads */
         .ad-slot-leaderboard { min-height: 90px; }
         .ad-slot-leaderboard .ad-unit { min-width: 320px; min-height: 50px; }
         @media (min-width: 768px) { .ad-slot-leaderboard .ad-unit { min-width: 728px; min-height: 90px; } }
-
         .ad-slot-native { min-height: 280px; }
         .ad-slot-native .ad-unit { min-width: 300px; min-height: 250px; }
-
         .ad-slot-bottom { min-height: 250px; }
         .ad-slot-bottom .ad-unit { min-width: 320px; min-height: 100px; }
         @media (min-width: 768px) { .ad-slot-bottom .ad-unit { min-width: 728px; min-height: 90px; } }
-
         .ad-slot-sticky-mobile {
             position: sticky; bottom: 0; z-index: 40; min-height: 60px;
         }
@@ -158,7 +120,7 @@
 </head>
 <body class="bg-white text-slate-600 font-sans antialiased selection:bg-brand-100 selection:text-brand-900">
 
-    <!-- ============== NAVIGATION BAR (matches main tool exactly) ============== -->
+    <!-- Navigation -->
     <nav class="w-full bg-white/90 backdrop-blur-sm border-b border-slate-200 sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <a href="/" class="flex items-center gap-2">
@@ -172,17 +134,16 @@
         </div>
     </nav>
 
-    <!-- ============== AD SLOT 1: LEADERBOARD — BELOW NAV / ABOVE BREADCRUMB ============== -->
+    <!-- Ad Leaderboard -->
     <div class="ad-slot-leaderboard w-full bg-slate-50 border-b border-slate-200 flex flex-col items-center justify-center py-2">
         <span class="text-[10px] text-slate-400 uppercase tracking-wider mb-1">Advertisement</span>
         <div class="ad-unit bg-slate-200 flex items-center justify-center text-slate-400 text-sm rounded">
-            <!-- PASTE ADSENSE <ins> CODE HERE — container above already reserves space, no CLS risk -->
             <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="XXXXXXXXXX" data-ad-format="auto" data-full-width-responsive="true"></ins>
             <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
         </div>
     </div>
 
-    <!-- BREADCRUMB -->
+    <!-- Breadcrumb -->
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
         <nav class="text-sm text-slate-400 flex items-center gap-2 flex-wrap" aria-label="Breadcrumb">
             <a href="/" class="hover:text-brand-600 transition-colors">Home</a>
@@ -193,7 +154,7 @@
         </nav>
     </div>
 
-    <!-- ============== ARTICLE HEADER / H1 ============== -->
+    <!-- Article Header -->
     <header class="w-full pt-6 pb-8 px-4 max-w-3xl mx-auto">
         <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900 leading-tight tracking-tight">IT Support and Managed Services Invoice Template — SLA Tiers and Per-Device Billing</h1>
         <p class="text-lg text-slate-500 mt-4 leading-relaxed">Managed service providers bill against SLA tiers and per-device counts that fluctuate monthly, making a static invoice template nearly useless within a quarter. This guide covers tiered SLA line items and emergency out-of-hours rate documentation.</p>
@@ -203,7 +164,7 @@
         </div>
     </header>
 
-    <!-- ============== TOP CTA BLOCK — HIGH-CONVERTING, ABOVE THE FOLD ============== -->
+    <!-- Top CTA -->
     <section class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
         <div class="bg-brand-50 border border-brand-100 rounded-2xl px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
@@ -216,21 +177,8 @@
         </div>
     </section>
 
-    <!-- ============================================================
-         ARTICLE BODY
-         Insert the article's body content below using this exact paragraph
-         rhythm. After every 4th <p> within the article, insert one
-         in-content native ad slot (copy the .ad-slot-native block).
-         A worked 12-paragraph example is shown below — duplicate the
-         pattern for longer articles, removing the example copy.
-         ============================================================ -->
+    <!-- Article Body -->
     <article class="seo-article max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-4">
-        <!-- If articles-data.json provides "body_html" for this article, the
-             ENTIRE region below (down to /BUILD:ARTICLE_BODY) is replaced with
-             that pre-rendered HTML. If not, this worked 12-paragraph example
-             is left as-is — its  /  tokens will then
-             be caught by the leftover-placeholder scanner and the build will
-             fail loudly for this article instead of publishing raw tokens. -->
         <h2 class='text-2xl font-bold text-slate-900 mt-10 mb-3 border-l-4 border-brand-500 pl-4'>Introduction to IT Support and Managed Services Invoice Template</h2>
 <p class='text-slate-600 leading-relaxed mb-4'>Managed service providers bill against SLA tiers and per-device counts that fluctuate monthly, making a static invoice template nearly useless within a quarter. This guide covers tiered SLA line items and emergency out-of-hours rate documentation.</p>
 <p class='text-slate-600 leading-relaxed mb-4'>Tech projects often involve scope creep and evolving requirements. A well-structured invoice protects your time and ensures you're compensated for every hour. This guide walks you through every line item and legal consideration so you can bill with confidence.</p>
@@ -267,10 +215,9 @@
   <p class='font-bold text-slate-900 text-lg'>Ready to create your invoice now?</p>
   <a href='/#invoice-tool' class='inline-block mt-3 bg-brand-500 hover:bg-brand-600 text-white px-6 py-3 rounded-lg font-semibold transition-all shadow-sm'>Generate Invoice PDF — Free</a>
 </div>
-
     </article>
 
-    <!-- ============== BOTTOM CTA BLOCK — END OF ARTICLE, HIGH-CONVERTING ============== -->
+    <!-- Bottom CTA -->
     <section class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
         <div class="bg-brand-500 rounded-2xl px-6 sm:px-10 py-9 text-center">
             <h2 class="text-2xl font-extrabold text-white tracking-tight mb-3">Build This Invoice in Under 60 Seconds</h2>
@@ -281,24 +228,18 @@
         </div>
     </section>
 
-    <!-- ============== RELATED ARTICLES / CONTEXTUAL INTERLINKS ============== -->
+    <!-- Related Articles -->
     <section class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
         <h2 class="text-xl font-bold text-slate-900 mb-5">Related Invoicing Guides</h2>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <!-- Repeated once per related article. Source: explicit "related"
-                 override in articles-data.json, or auto-derived from the
-                 lateral-link table in interlinking-map.md keyed by "n". -->
             <!-- No related articles -->
         </div>
     </section>
 
-    <!-- ============== FAQ SECTION (accordion — matches main tool pattern) ==============
-         Stripped entirely (this section + the FAQPage JSON-LD above) if the
-         article has no "faq" data — an empty or single-dummy-question FAQ
-         section is worse than no FAQ section. ============== -->
+    <!-- FAQ Section -->
     
 
-    <!-- ============== AD SLOT 5: BOTTOM BANNER — ABOVE FOOTER ============== -->
+    <!-- Bottom Ad -->
     <section class="ad-slot-bottom w-full bg-slate-50 border-y border-slate-200 py-6 flex flex-col items-center justify-center mb-0">
         <span class="text-[10px] text-slate-400 uppercase tracking-wider mb-2">Advertisement</span>
         <div class="ad-unit bg-slate-200 flex items-center justify-center text-slate-400 text-sm rounded">
@@ -307,7 +248,7 @@
         </div>
     </section>
 
-    <!-- ============== FOOTER (matches main tool exactly) ============== -->
+    <!-- Footer -->
     <footer class="w-full bg-slate-900 text-slate-400 py-12 px-6">
         <div class="max-w-7xl mx-auto flex flex-col gap-8">
             <div class="flex flex-col md:flex-row justify-between items-center gap-6">
@@ -331,17 +272,8 @@
         </div>
     </footer>
 
-    <!-- ============== OPTIONAL: STICKY MOBILE BOTTOM AD (uncomment to enable) ==============
-    <div class="ad-slot-sticky-mobile sm:hidden w-full bg-white border-t border-slate-200 flex items-center justify-center">
-        <div class="ad-unit bg-slate-200 flex items-center justify-center text-slate-400 text-xs rounded">
-            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="XXXXXXXXXX" data-ad-format="auto" data-full-width-responsive="true"></ins>
-            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-        </div>
-    </div>
-    -->
-
     <script>
-        // FAQ accordion behavior — identical to main tool
+        // FAQ accordion
         document.querySelectorAll('.faq-trigger').forEach(function (btn) {
             btn.addEventListener('click', function () {
                 const body = btn.nextElementSibling;
@@ -356,7 +288,6 @@
                 }
             });
         });
-
         if (window.lucide) lucide.createIcons();
         document.addEventListener('DOMContentLoaded', function () {
             if (window.lucide) lucide.createIcons();
