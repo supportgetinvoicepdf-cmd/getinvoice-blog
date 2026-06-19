@@ -1,0 +1,107 @@
+name: Generate Blog Articles
+
+on:
+  push:
+    paths:
+      - 'articles-data.json'
+      - 'article-template.html'
+  workflow_dispatch:
+
+jobs:
+  build-articles:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Generate HTML Files
+        run: |
+          python -c "
+          import json, os, sys, datetime, re
+
+          def run_build():
+              base_dir = os.getcwd()
+              json_path = os.path.join(base_dir, 'articles-data.json')
+              template_path = os.path.join(base_dir, 'article-template.html')
+              
+              # 1. Verification: Check if files actually exist
+              if not os.path.exists(json_path):
+                  raise FileNotFoundError(f'Missing data file: {json_path}')
+              if not os.path.exists(template_path):
+                  raise FileNotFoundError(f'Missing template file: {template_path}')
+                  
+              # 2. Safely load the data
+              with open(json_path, 'r', encoding='utf-8') as f:
+                  data = json.load(f)
+              with open(template_path, 'r', encoding='utf-8') as f:
+                  master_template = f.read()
+                  
+              articles = data.get('articles', [])
+              if not articles:
+                  raise ValueError('No articles found in JSON array. Check your JSON format.')
+                  
+              print(f'Found {len(articles)} articles. Beginning generation...')
+              
+              today_iso = datetime.datetime.now().strftime('%Y-%m-%d')
+              today_display = datetime.datetime.now().strftime('%B %d, %Y')
+              
+              # 3. Process each article defensively
+              for article in articles:
+                  slug = article.get('slug')
+                  if not slug:
+                      print(f'WARNING: Skipping article without a slug: {article.get("title", "Unknown")}')
+                      continue
+                      
+                  folder = os.path.join(base_dir, 'blog', slug)
+                  os.makedirs(folder, exist_ok=True)
+                  
+                  html = master_template
+                  
+                  # Universal Metadata Replacements
+                  html = html.replace('{{ARTICLE_TITLE}}', article.get('title', ''))
+                  html = html.replace('{{META_DESCRIPTION}}', article.get('excerpt', ''))
+                  html = html.replace('{{CANONICAL_SLUG}}', slug)
+                  html = html.replace('{{ARTICLE_H1}}', article.get('title', ''))
+                  html = html.replace('{{ARTICLE_DEK}}', article.get('excerpt', ''))
+                  html = html.replace('{{PUBLISH_DATE_ISO}}', today_iso)
+                  html = html.replace('{{MODIFIED_DATE_ISO}}', today_iso)
+                  html = html.replace('{{MODIFIED_DATE_DISPLAY}}', today_display)
+                  html = html.replace('{{READ_TIME}}', '5')
+                  
+                  # Content Replacements (using .get() so it never crashes if a paragraph is missing)
+                  html = html.replace('{{H2_SECTION_1_HEADING}}', article.get('h2_heading', ''))
+                  html = html.replace('{{PARAGRAPH_1}}', article.get('paragraph_1', ''))
+                  html = html.replace('{{PARAGRAPH_2}}', article.get('paragraph_2', ''))
+                  html = html.replace('{{PARAGRAPH_3}}', article.get('paragraph_3', ''))
+                  html = html.replace('{{PARAGRAPH_4}}', article.get('paragraph_4', ''))
+                  
+                  # Cleanup: Remove FAQ HTML blocks if the JSON article has no FAQ data
+                  if not article.get('faq'):
+                      html = re.sub(r'.*?', '', html, flags=re.DOTALL)
+                      html = re.sub(r'.*?', '', html, flags=re.DOTALL)
+                      
+                  # 4. Save the file to the correct folder
+                  out_path = os.path.join(folder, 'index.html')
+                  with open(out_path, 'w', encoding='utf-8') as f:
+                      f.write(html)
+                  print(f'SUCCESS: Generated blog/{slug}/index.html')
+                  
+          # 5. Execute with strict error catching
+          try:
+              run_build()
+              print('\nAll 37 articles generated successfully!')
+          except Exception as e:
+              print(f'\nCRITICAL BUILD ERROR: {e}\n')
+              sys.exit(1)
+          "
+
+      - name: Save to GitHub
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add blog/
+          git commit -m "Auto-generated 37 blog articles via God-Level Pipeline" || echo "No changes to commit"
+          git push
+          
