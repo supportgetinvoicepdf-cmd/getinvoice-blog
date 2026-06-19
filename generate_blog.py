@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-generate_blog.py – renders articles from articles-data.json
-Uses excerpt as fallback for body_html.
+generate_blog.py – Ultimate rich content generator with dynamic read time,
+category-aware section templates, and custom body_html override.
 """
 
 import json
@@ -10,16 +10,16 @@ import re
 from datetime import datetime
 from pathlib import Path
 
+# ---------- Configuration ----------
 ARTICLES_JSON = "articles-data.json"
 TEMPLATE_FILE = "article-template.html"
 OUTPUT_DIR = "blog"
 
-# Simple placeholder mapping
 SIMPLE_MAP = {
     "title": "ARTICLE_TITLE",
     "slug": "CANONICAL_SLUG",
     "excerpt": "ARTICLE_DEK",
-    "h1": "ARTICLE_H1",          # fallback to title
+    "h1": "ARTICLE_H1",
     "modified_date_display": "MODIFIED_DATE_DISPLAY",
     "read_time": "READ_TIME",
     "faq_intro": "FAQ_INTRO_LINE",
@@ -27,6 +27,7 @@ SIMPLE_MAP = {
     "modified_date_iso": "MODIFIED_DATE_ISO",
 }
 
+# ---------- Helpers ----------
 def load_json(path):
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
@@ -45,10 +46,7 @@ def find_build_blocks(template):
     blocks = {}
     for match in re.finditer(pattern, template, re.DOTALL):
         name = match.group(1)
-        start = match.start()
-        end = match.end()
-        inner = match.group(2)
-        blocks[name] = (start, end, inner)
+        blocks[name] = (match.start(), match.end(), match.group(2))
     return blocks
 
 def replace_build_blocks(template, blocks_map):
@@ -62,6 +60,92 @@ def replace_build_blocks(template, blocks_map):
         template = template[:start] + new_content + template[end:]
     return template
 
+# ---------- RICH CONTENT GENERATOR (Category-Aware) ----------
+def build_rich_body(title, excerpt, category):
+    """Generate a professional, multi-section article with category-specific focus."""
+    # Clean topic
+    topic = title.split("—")[0].strip()
+    if not topic:
+        topic = title
+
+    # Category-specific intro and tips
+    category_intros = {
+        "creative": "For creative professionals, your invoice is a reflection of your brand. Clear, itemized billing builds trust and reduces revisions.",
+        "tech": "Tech projects often involve scope creep and evolving requirements. A well-structured invoice protects your time and ensures you're compensated for every hour.",
+        "pro": "Professional services rely on trust and transparency. Detailed invoices with retainer terms and expense breakdowns are non-negotiable.",
+        "trades": "In construction and logistics, every material and hour counts. Separating labor from supplies avoids disputes and keeps your clients informed.",
+        "niche": "Specialty services demand specialized billing. Whether it's healthcare or events, your invoice must meet industry-specific compliance.",
+        "late": "Late payments hurt cash flow. Mastering the art of follow-up and penalty enforcement is essential for freelancers.",
+        "core": "Mastering the fundamentals of invoicing – from numbering to tax – is the foundation of a healthy business."
+    }
+    intro_text = category_intros.get(category, "Professional invoicing is the backbone of a successful freelance business.")
+
+    # Sections
+    sections = []
+
+    # 1. Introduction
+    sections.append(f"<h2 class='text-2xl font-bold text-slate-900 mt-10 mb-3 border-l-4 border-brand-500 pl-4'>Introduction to {topic}</h2>")
+    sections.append(f"<p class='text-slate-600 leading-relaxed mb-4'>{excerpt}</p>")
+    sections.append(f"<p class='text-slate-600 leading-relaxed mb-4'>{intro_text} This guide walks you through every line item and legal consideration so you can bill with confidence.</p>")
+
+    # 2. Key Components
+    sections.append(f"<h2 class='text-2xl font-bold text-slate-900 mt-10 mb-3 border-l-4 border-brand-500 pl-4'>Key Components of a {topic} Invoice</h2>")
+    sections.append(f"<ul class='list-disc pl-6 mb-4 text-slate-600 space-y-2'>")
+    sections.append(f"  <li><strong class='text-slate-900'>Detailed Service Description:</strong> Be specific – avoid vague terms like 'consulting' or 'work'.</li>")
+    sections.append(f"  <li><strong class='text-slate-900'>Clear Pricing Structure:</strong> Hourly, project-based, or retainer – choose the right model.</li>")
+    sections.append(f"  <li><strong class='text-slate-900'>Expense Reimbursement:</strong> Outline how costs like travel, materials, or software are billed.</li>")
+    sections.append(f"  <li><strong class='text-slate-900'>Tax and Currency:</strong> Apply correct VAT/GST rates and use a currency that matches your contract.</li>")
+    sections.append(f"</ul>")
+
+    # 3. Category-Specific Tips
+    category_tips = {
+        "creative": "Always include revision limits and usage rights (e.g., commercial vs editorial) to avoid extra work without compensation.",
+        "tech": "Track time with a reliable tool and attach logs if you bill hourly. For fixed-price, break the project into milestones.",
+        "pro": "Consider a retainer model to ensure predictable income. Clearly define what's included and what triggers additional fees.",
+        "trades": "Include a separate line for materials (with receipts) and labor. This makes it easy for clients to verify and for you to claim deductions.",
+        "niche": "For medical or event billing, use the correct coding (CPT/ICD‑10 for healthcare) and separate vendor pass-through costs.",
+        "late": "State your late fee policy clearly – it speeds up payment even if you never enforce it.",
+        "core": "Number your invoices sequentially and keep copies for audit purposes – it's a legal requirement in many jurisdictions."
+    }
+    tip = category_tips.get(category, "Customise your invoice to reflect your specific service offering and client expectations.")
+    sections.append(f"<h2 class='text-2xl font-bold text-slate-900 mt-10 mb-3 border-l-4 border-brand-500 pl-4'>Pro Tips for Your Industry</h2>")
+    sections.append(f"<p class='text-slate-600 leading-relaxed mb-4'>{tip}</p>")
+
+    # 4. Step-by-Step Billing Workflow
+    sections.append(f"<h2 class='text-2xl font-bold text-slate-900 mt-10 mb-3 border-l-4 border-brand-500 pl-4'>Step‑by‑Step Billing Workflow</h2>")
+    sections.append(f"<ol class='list-decimal pl-6 mb-4 text-slate-600 space-y-2'>")
+    sections.append(f"  <li><strong class='text-slate-900'>Create the Invoice:</strong> Use a template or generator to populate client and service details.</li>")
+    sections.append(f"  <li><strong class='text-slate-900'>Set Currency & Tax:</strong> Select the correct currency and apply the appropriate tax rates.</li>")
+    sections.append(f"  <li><strong class='text-slate-900'>Define the Due Date:</strong> Calculate the payment deadline based on your agreed terms (e.g., Net 30).</li>")
+    sections.append(f"  <li><strong class='text-slate-900'>Review & Send:</strong> Double‑check all figures and send to your client via email.</li>")
+    sections.append(f"  <li><strong class='text-slate-900'>Follow Up Systematically:</strong> Use a polite reminder at Day 1, a firm notice at Day 7, and a formal demand at Day 30 if needed.</li>")
+    sections.append(f"</ol>")
+
+    # 5. Legal and Tax Compliance
+    sections.append(f"<h2 class='text-2xl font-bold text-slate-900 mt-10 mb-3 border-l-4 border-brand-500 pl-4'>Legal & Tax Compliance</h2>")
+    sections.append(f"<p class='text-slate-600 leading-relaxed mb-4'>Your invoice is a legal document. In the UK, the <strong>Late Payment of Commercial Debts Act 1998</strong> allows you to charge statutory interest (8% above Bank of England base rate) and a fixed recovery fee. In the US, late fee rates vary by state — 1.5% per month (18% APR) is generally considered reasonable. In the EU, the <strong>Late Payment Directive 2011/7/EU</strong> entitles you to interest at the ECB rate plus 8 percentage points.</p>")
+    sections.append(f"<p class='text-slate-600 leading-relaxed mb-4'>Always include a clear late fee clause on your invoice to protect your rights. If you operate internationally, be aware of currency exchange risks and SWIFT routing fees.</p>")
+
+    # 6. Best Practices for Faster Payment
+    sections.append(f"<h2 class='text-2xl font-bold text-slate-900 mt-10 mb-3 border-l-4 border-brand-500 pl-4'>Best Practices for Faster Payment</h2>")
+    sections.append(f"<ul class='list-disc pl-6 mb-4 text-slate-600 space-y-2'>")
+    sections.append(f"  <li>Send invoices immediately after project completion or milestone delivery.</li>")
+    sections.append(f"  <li>Use consistent numbering (e.g., INV‑001, INV‑002) to avoid gaps or duplicates.</li>")
+    sections.append(f"  <li>Offer multiple payment methods — bank transfer, credit card, and digital wallets.</li>")
+    sections.append(f"  <li>Keep a record of all communication in case of disputes.</li>")
+    sections.append(f"</ul>")
+
+    # 7. Call to Action – Generator
+    sections.append(f"<h2 class='text-2xl font-bold text-slate-900 mt-10 mb-3 border-l-4 border-brand-500 pl-4'>Generate Your Professional Invoice Instantly</h2>")
+    sections.append(f"<p class='text-slate-600 leading-relaxed mb-4'>Manual invoicing is time‑consuming and error‑prone. Our free, browser‑based invoice generator includes every field discussed in this guide — from late fee calculators to multi‑currency support. No sign‑up required, and your data never leaves your device.</p>")
+    sections.append(f"<div class='bg-brand-50 border border-brand-200 rounded-xl p-6 text-center my-6'>")
+    sections.append(f"  <p class='font-bold text-slate-900 text-lg'>Ready to create your invoice now?</p>")
+    sections.append(f"  <a href='/#invoice-tool' class='inline-block mt-3 bg-brand-500 hover:bg-brand-600 text-white px-6 py-3 rounded-lg font-semibold transition-all shadow-sm'>Generate Invoice PDF — Free</a>")
+    sections.append(f"</div>")
+
+    return "\n".join(sections)
+
+# ---------- Article Renderer ----------
 def generate_article_html(article, template):
     # Build context
     context = {}
@@ -73,17 +157,19 @@ def generate_article_html(article, template):
             value = article.get("title", "")
         context[placeholder] = value
 
-    # Default dates if missing
-    if not context.get("PUBLISH_DATE_ISO"):
-        context["PUBLISH_DATE_ISO"] = datetime.now().isoformat()
-    if not context.get("MODIFIED_DATE_ISO"):
-        context["MODIFIED_DATE_ISO"] = datetime.now().isoformat()
+    today = datetime.now()
     if not context.get("MODIFIED_DATE_DISPLAY"):
-        context["MODIFIED_DATE_DISPLAY"] = datetime.now().strftime("%B %d, %Y")
-    if not context.get("READ_TIME"):
-        context["READ_TIME"] = "3"   # fallback
+        context["MODIFIED_DATE_DISPLAY"] = today.strftime("%B %d, %Y")
+    if not context.get("PUBLISH_DATE_ISO"):
+        context["PUBLISH_DATE_ISO"] = today.isoformat()
+    if not context.get("MODIFIED_DATE_ISO"):
+        context["MODIFIED_DATE_ISO"] = today.isoformat()
 
-    # Simple placeholder replacement
+    # Read time will be calculated after body is generated
+    # We'll set a placeholder and update later
+    context["READ_TIME"] = "3"  # temporary
+
+    # Replace simple placeholders
     for placeholder, value in context.items():
         template = template.replace("{{" + placeholder + "}}", str(value))
 
@@ -128,24 +214,38 @@ def generate_article_html(article, template):
     if "JSONLD_FAQ" in blocks:
         faq_list = article.get("faq", [])
         if faq_list:
-            main_entity = [{"@type": "Question", "name": item.get("question", ""), "acceptedAnswer": {"@type": "Answer", "text": item.get("answer", "")}} for item in faq_list]
+            main_entity = []
+            for item in faq_list:
+                main_entity.append({
+                    "@type": "Question",
+                    "name": item.get("question", ""),
+                    "acceptedAnswer": {"@type": "Answer", "text": item.get("answer", "")}
+                })
             faq_schema = {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": main_entity}
             new_blocks["JSONLD_FAQ"] = f'<script type="application/ld+json">\n{json.dumps(faq_schema, indent=2)}\n</script>'
         else:
             new_blocks["JSONLD_FAQ"] = ""
 
-    # ARTICLE_BODY – fallback to excerpt if body_html missing
-    if "ARTICLE_BODY" in blocks:
-        body_html = article.get("body_html", "")
-        if not body_html:
-            # Generate a simple body from excerpt and maybe a standard intro
-            excerpt = article.get("excerpt", "")
-            title = article.get("title", "")
-            # Wrap excerpt in paragraphs, add a simple H2 based on title
-            body_html = f"<h2 class='text-2xl font-bold text-slate-900 mt-2 mb-3 border-l-4 border-brand-500 pl-4'>Understanding This Invoice Structure</h2>"
-            body_html += f"<p class='text-slate-600 leading-relaxed mb-4'>{excerpt}</p>"
-            # You can add more default paragraphs if needed
-        new_blocks["ARTICLE_BODY"] = body_html
+    # ARTICLE_BODY – build body first, then calculate read time
+    body_html = article.get("body_html", "")
+    if body_html:
+        final_body = body_html
+    else:
+        title = article.get("title", "")
+        excerpt = article.get("excerpt", "")
+        category = article.get("cat", "core")
+        final_body = build_rich_body(title, excerpt, category)
+
+    # Calculate read time based on word count (approx 200 words per minute)
+    word_count = len(re.findall(r'\w+', final_body))
+    read_time = max(3, round(word_count / 200))  # at least 3 minutes
+    context["READ_TIME"] = str(read_time)
+
+    # Replace the read time placeholder in the template
+    template = template.replace("{{READ_TIME}}", str(read_time))
+
+    # Put body into block
+    new_blocks["ARTICLE_BODY"] = final_body
 
     # FAQ_SECTION
     if "FAQ_SECTION" in blocks:
@@ -158,7 +258,7 @@ def generate_article_html(article, template):
                 a = item.get("answer", "")
                 rendered = faq_item_inner.replace("{{FAQ_QUESTION}}", q).replace("{{FAQ_ANSWER}}", a)
                 rendered_items.append(rendered)
-            intro = context.get("FAQ_INTRO_LINE", "")
+            intro = context.get("FAQ_INTRO_LINE", "Get answers to common questions about this topic.")
             faq_section_html = f'''
 <section class="faq-section max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
     <h2 class="text-2xl font-bold text-slate-900 mb-2">Frequently Asked Questions</h2>
@@ -185,16 +285,17 @@ def generate_article_html(article, template):
                 rendered_cards.append(card)
             new_blocks["RELATED_CARD"] = "\n".join(rendered_cards)
         else:
-            new_blocks["RELATED_CARD"] = ""
+            new_blocks["RELATED_CARD"] = "<!-- No related articles -->"
 
-    # Apply all block replacements
+    # Apply replacements
     template = replace_build_blocks(template, new_blocks)
 
-    # Remove any leftover {{...}} tokens
+    # Clean any leftover placeholders
     template = re.sub(r"\{\{[^}]+\}\}", "", template)
 
     return template
 
+# ---------- Main ----------
 def main():
     data = load_json(ARTICLES_JSON)
     template = read_template(TEMPLATE_FILE)
@@ -204,15 +305,15 @@ def main():
         return
 
     for article in articles:
-        slug = article.get("slug", "")
+        slug = article.get("slug")
         if not slug:
             continue
-        print(f"Generating: {slug}")
+        print(f"Generating rich article: {slug}")
         html = generate_article_html(article, template)
         out_path = os.path.join(OUTPUT_DIR, f"{slug}.html")
         write_output(out_path, html)
 
-    print(f"✅ Generated {len(articles)} articles in '{OUTPUT_DIR}/'")
+    print(f"✅ Generated {len(articles)} rich articles in '{OUTPUT_DIR}/'")
 
 if __name__ == "__main__":
     main()
