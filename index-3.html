@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Invoice Generator PDF — No Sign Up | GetInvoicePDF.com</title>
+    <meta name="description" content="Generate a professional invoice PDF instantly — no sign up, no account, 100% free. Includes late payment fee calculator and demand letter generator. Works entirely in your browser.">
+    <link rel="canonical" href="https://www.getinvoicepdf.com/">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Free Invoice Generator PDF — No Sign Up | GetInvoicePDF.com">
+    <meta property="og:description" content="Generate a professional invoice PDF instantly — no sign up, no account, 100% free. Includes late payment fee calculator and demand letter generator.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.getinvoicepdf.com/">
+    <meta property="og:image" content="/og-image.png">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', "Liberation Mono", "Courier New", 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            50:  '#f5f3ff',
+                            100: '#ede9fe',
+                            500: '#7c3aed',
+                            600: '#6d28d9',
+                            700: '#5b21b6',
+                            900: '#2e1065',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest" defer></script>
+
+    <!-- JSON-LD Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "GetInvoicePDF — Free Invoice Generator",
+      "url": "https://www.getinvoicepdf.com",
+      "description": "Free browser-based invoice generator with PDF export, late payment fee calculator, and demand letter generator. No sign up required. 100% client-side.",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "featureList": [
+        "Invoice PDF generator no sign up",
+        "Late payment fee calculator",
+        "Demand letter generator",
+        "Multi-currency support",
+        "Client-side only — no data uploaded"
+      ],
+      "creator": {
+        "@type": "Organization",
+        "name": "GetInvoicePDF.com"
+      }
+    }
+    </script>
+
+    <!-- Custom Styles & Print Stylesheet -->
+    <style>
+        :root {
+            --brand: #7c3aed;
+        }
+
+        /* Smooth Scrolling */
+        html { scroll-behavior: smooth; }
+
+        /* Custom Scrollbar for Textareas */
+        textarea::-webkit-scrollbar { width: 8px; }
+        textarea::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+        textarea::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        textarea::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* Accordion Animation */
+        .faq-body, .accordion-body {
+            transition: max-height 0.3s ease-in-out;
+        }
+        .lucide-chevron-down {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        /* Toast Animation */
+        @keyframes slideInUp {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        .toast-enter { animation: slideInUp 0.3s ease-out forwards; }
+        .toast-exit { animation: fadeOut 0.3s ease-out forwards; }
+
+        /* Hide number input arrows */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        /* Print Stylesheet */
+        * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+
+        @media print {
+            /* Hide everything that is not the invoice or letter */
+            body > *:not(#print-root) { display: none !important; }
+            nav, #ad-leaderboard, #ad-banner-2, #ad-sidebar,
+            .action-buttons-row, .faq-section, footer, .hero-section, 
+            .seo-article, .accordion-toggle, .quick-fill-buttons,
+            .late-fee-accordion, .no-print, .toast-container,
+            #demand-letter-engine { display: none !important; }
+
+            /* Show only the invoice workspace content by default */
+            #print-root { display: block !important; width: 100% !important; }
+            #invoice-tool { display: block !important; box-shadow: none !important; border: none !important; padding: 0 !important; margin: 0 !important; }
+
+            /* Page setup */
+            @page { size: A4; margin: 15mm 20mm 20mm 20mm; }
+            
+            /* Invoice print layout */
+            body { font-family: 'Inter', Arial, sans-serif; font-size: 10pt; color: #1e293b; background: white; }
+            
+            /* Make inputs look like regular text */
+            input, textarea, select { 
+                border: none !important; 
+                background: transparent !important; 
+                appearance: none !important; 
+                -webkit-appearance: none !important; 
+                padding: 0 !important; 
+                margin: 0 !important; 
+                color: #1e293b !important; 
+                resize: none !important; 
+                box-shadow: none !important;
+                outline: none !important;
+            }
+            textarea { overflow: hidden !important; height: auto !important; }
+            input::placeholder, textarea::placeholder { color: transparent !important; }
+
+            /* Invoice header: logo left, company info right */
+            #print-header { display: flex !important; justify-content: space-between; align-items: flex-start; margin-bottom: 24pt; }
+            
+            /* Invoice meta: bill-to left, invoice details right */
+            #print-meta { display: grid !important; grid-template-columns: 1fr 1fr; gap: 24pt; margin-bottom: 20pt; }
+            
+            /* Line items table */
+            table { width: 100%; border-collapse: collapse; margin-bottom: 16pt; }
+            th { background-color: #7c3aed !important; color: white !important; padding: 6pt 8pt; text-align: left; font-size: 9pt; font-weight: 600; }
+            td { padding: 5pt 8pt; border-bottom: 1px solid #e2e8f0; font-size: 9pt; color: #334155; }
+            tr:nth-child(even) td { background-color: #f8fafc !important; }
+            
+            /* Totals block */
+            #print-totals { margin-left: auto; width: 200pt; margin-bottom: 16pt; }
+            #print-totals .total-row { display: flex; justify-content: space-between; padding: 3pt 0; border-bottom: 1px solid #f1f5f9; font-size: 9pt; }
+            #print-totals .grand-total { font-weight: 700; font-size: 11pt; color: #7c3aed !important; border-top: 2px solid #7c3aed !important; padding-top: 6pt; margin-top: 4pt; }
+            
+            /* Notes / payment terms */
+            #print-notes { border-top: 1px solid #e2e8f0; padding-top: 12pt; font-size: 8pt; color: #64748b; margin-top: 12pt; }
+            
+            /* Footer line */
+            #print-footer { margin-top: 24pt; padding-top: 8pt; border-top: 1px solid #e2e8f0; font-size: 7.5pt; color: #94a3b8; text-align: center; }
+            
+            /* Page break rules */
+            table { page-break-inside: auto; }
+            tr { page-break-inside: avoid; }
+
+            /* --- DEMAND LETTER PRINT MODE --- */
+            body.print-letter #invoice-tool { display: none !important; }
+            body.print-letter #demand-letter-engine { display: block !important; box-shadow: none !important; border: none !important; padding: 0 !important; margin: 0 !important; }
+            body.print-letter #demand-letter-engine .accordion-toggle, 
+            body.print-letter #demand-letter-engine .tone-tabs,
+            body.print-letter #demand-letter-engine .action-buttons-row { display: none !important; }
+            body.print-letter #demand-letter-engine .accordion-body { max-height: none !important; overflow: visible !important; }
+            body.print-letter #demand-letter-output { 
+                font-family: 'Inter', Arial, sans-serif !important; 
+                font-size: 11pt !important; 
+                color: #000 !important; 
+                white-space: pre-wrap !important;
+                width: 100% !important;
+                height: auto !important;
+                overflow: visible !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-white text-slate-600 font-sans antialiased selection:bg-brand-100 selection:text-brand-900">
+
+    <!-- [B] NAVIGATION BAR -->
+    <nav class="w-full bg-white/90 backdrop-blur-sm border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <i data-lucide="zap" class="w-6 h-6 text-brand-500 fill-brand-500"></i>
+                <span class="font-bold text-xl text-slate-900 tracking-tight">GetInvoicePDF<span class="text-brand-500">.com</span></span>
+            </div>
+            <a href="#invoice-tool" class="bg-brand-500 hover:bg-brand-600 text-white px-4 py-2 rounded-lg font-medium text-sm transition-all shadow-sm flex items-center gap-2">
+                <span class="hidden sm:inline">Generate Invoice PDF</span>
+                <i data-lucide="arrow-down" class="w-4 h-4"></i>
+            </a>
+        </div>
+    </nav>
+
+    <!-- [C] ADSENSE LEADERBOARD - SLOT 1 -->
+    <div id="ad-leaderboard" class="w-full bg-slate-50 border-b border-slate-200 flex flex-col items-center justify-center py-2" style="min-height: 90px;">
+        <span class="text-[10px] text-slate-400 uppercase tracking-wider mb-1">Advertisement</span>
+        <div style="min-width: 320px; min-height: 50px;" class="md:min-w-[728px] md:min-h-[90px] bg-slate-200 flex items-center justify-center text-slate-400 text-sm rounded">
+            <!-- AdSense Code Placeholder -->
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="XXXXXXXXXX" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+    </div>
+
+    <!-- [D] HERO SECTION -->
+    <header class="hero-section w-full py-10 md:py-14 px-4 text-center max-w-4xl mx-auto">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 leading-tight tracking-tight">
+            <span class="text-brand-500">Free</span> Invoice Generator PDF — No Sign Up Required
+        </h1>
+        <p class="text-lg text-slate-500 max-w-2xl mx-auto mt-4">
+            Create a professional invoice PDF in under 60 seconds. Calculate late payment fees by jurisdiction. Generate a demand letter automatically. Zero accounts. Zero email. Zero conditions.
+        </p>
+        <div class="flex flex-wrap items-center justify-center gap-3 mt-8">
+            <div class="flex items-center gap-1.5 bg-brand-50 border border-brand-100 text-brand-700 rounded-full px-3 py-1 text-sm font-medium">
+                <i data-lucide="check-circle-2" class="w-4 h-4"></i> 100% Free — No Sign Up
+            </div>
+            <div class="flex items-center gap-1.5 bg-brand-50 border border-brand-100 text-brand-700 rounded-full px-3 py-1 text-sm font-medium">
+                <i data-lucide="shield-check" class="w-4 h-4"></i> Client-Side Only — Your Data Never Leaves
+            </div>
+            <div class="flex items-center gap-1.5 bg-brand-50 border border-brand-100 text-brand-700 rounded-full px-3 py-1 text-sm font-medium">
+                <i data-lucide="download" class="w-4 h-4"></i> Instant PDF Export
+            </div>
+        </div>
+    </header>
+
+    <!-- SUPPORTED CURRENCIES STRIP -->
+    <section class="w-full bg-slate-50 border-y border-slate-200 py-3 overflow-x-auto">
+        <div class="flex items-center justify-center gap-2 flex-wrap px-4">
+            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wide mr-2 whitespace-nowrap">Supported Currencies:</span>
+            <span class="inline-flex items-center gap-1 bg-white border border-slate-200 rounded-full px-3 py-1 text-xs font-medium text-slate-700 whitespace-nowrap shadow-sm">🇺🇸 USD ($)</span>
+            <span class="inline-flex items-center gap-1 bg-white border border-slate-200 rounded-full px-3 py-1 text-xs font-medium text-slate-700 whitespace-nowrap shadow-sm">🇬🇧 GBP (£)</span>
+            <span class="inline-flex items-center gap-1 bg-white border border-slate-200 rounded-full px-3 py-1 text-xs font-medium text-slate-700 whitespace-nowrap shadow-sm">🇪🇺 EUR (€)</span>
+            <span class="inline-flex items-center gap-1 bg-white border border-slate-200 rounded-full px-3 py-1 text-xs font-medium text-slate-700 whitespace-nowrap shadow-sm">🇨🇦 CAD (C$)</span>
+            <span class="inline-flex items-center gap-1 bg-white border border-slate-200 rounded-full px-3 py-1 text-xs font-medium text-slate-700 whitespace-nowrap shadow-sm">🇦🇺 AUD (A$)</span>
+            <span class="inline-flex items-center gap-1 bg-white border border-slate-200 rounded-full px-3 py-1 text-xs font-medium text-slate-700 whitespace-nowrap shadow-sm">🇯🇵 JPY (¥)</span>
+            <span class="inline-flex items-center gap-1 bg-white border border-slate-200 rounded-full px-3 py-1 text-xs font-medium text-slate-700 whitespace-nowrap shadow-sm">🇮🇳 INR (₹)</span>
+            <span class="inline-flex items-center gap-1 bg-white border border-slate-200 rounded-full px-3 py-1 text-xs font-medium text-slate-700 whitespace-nowrap shadow-sm">🇨🇭 CHF</span>
+            <span class="inline-flex items-center gap-1 bg-white border border-slate-200 rounded-full px-3 py-1 text-xs font-medium text-slate-700 whitespace-nowrap shadow-sm">🇸🇬 SGD (S$)</span>
+            <span class="inline-flex items-center gap-1 bg-white border border-slate-200 rounded-full px-3 py-1 text-xs font-medium text-slate-700 whitespace-nowrap shadow-sm">🇲🇽 MXN (MX$)</span>
+        </div>
+    </section>
+
+    <!-- MAIN CONTAINER -->
+    <main id="print-root" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+        <div class="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-8 items-start">
+            
+            <!-- LEFT COLUMN: TOOLS -->
+            <div class="flex flex-col gap-8 w-full min-w-0">
+                
+                <!-- [E1] INVOICE WORKSPACE CARD -->
+                <div id="invoice-tool" class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 md:p-8 relative">
+                    
+                    <!-- Print Header (Logo & Sender) -->
+                    <div id="print-header" class="flex flex-col md:flex-row justify-between gap-6 mb-8">
+                        <!-- Logo Upload -->
+                        <div class="w-full md:w-1/2 flex flex-col gap-2">
+                            <div id="logo-container" class="relative group w-48 h-24 border-2 border-dashed border-slate-300 rounded-lg flex items-center justify-center bg-slate-50 hover:bg-slate-100 transition-colors cursor-pointer overflow-hidden no-print">
+                                <label for="logo-upload" class="absolute inset-0 w-full h-full cursor-pointer flex flex-col items-center justify-center text-slate-500">
+                                    <i data-lucide="image-plus" class="w-6 h-6 mb-1"></i>
+                                    <span class="text-xs font-medium">Upload Logo</span>
+                                </label>
+                                <input type="file" id="logo-upload" accept="image/*" class="hidden">
+                                <img id="logo-preview" src="" alt="Company Logo" class="hidden max-h-[80px] w-auto object-contain z-10 bg-white px-2">
+                            </div>
+                            <button id="remove-logo" class="hidden text-xs text-red-500 hover:text-red-700 font-medium self-start no-print">Remove Logo</button>
+                            <!-- Print Logo Container -->
+                            <div id="print-logo-container" class="hidden print:block h-20">
+                                <img id="print-logo-img" src="" class="max-h-full w-auto object-contain">
+                            </div>
+                        </div>
+
+                        <!-- Sender Details -->
+                        <div class="w-full md:w-1/2 flex flex-col gap-3 text-right">
+                            <input type="text" id="sender-name" placeholder="Your Name / Business Name" class="border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 rounded-lg px-3 py-2 w-full text-slate-900 font-bold md:text-right placeholder:font-normal">
+                            <input type="email" id="sender-email" placeholder="Your Email" class="border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 rounded-lg px-3 py-2 w-full text-slate-600 md:text-right">
+                            <textarea id="sender-address" rows="2" placeholder="Your Address" class="border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 rounded-lg px-3 py-2 w-full text-slate-600 md:text-right resize-none"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Print Meta (Bill To & Invoice Details) -->
+                    <div id="print-meta" class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                        <!-- Bill To -->
+                        <div class="flex flex-col gap-3">
+                            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Bill To</h3>
+                            <input type="text" id="client-name" placeholder="Client Name" class="border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 rounded-lg px-3 py-2 w-full text-slate-900 font-bold placeholder:font-normal">
+                            <input type="email" id="client-email" placeholder="Client Email" class="border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 rounded-lg px-3 py-2 w-full text-slate-600">
+                            <textarea id="client-address" rows="2" placeholder="Client Address" class="border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 rounded-lg px-3 py-2 w-full text-slate-600 resize-none"></textarea>
+                        </div>
+
+                        <!-- Invoice Details -->
+                        <div class="flex flex-col gap-3 bg-slate-50 p-4 rounded-lg border border-slate-100 print:bg-transparent print:border-none print:p-0">
+                            <div class="flex items-center justify-between gap-2">
+                                <label class="text-sm font-medium text-slate-600 whitespace-nowrap">Invoice #</label>
+                                <input type="text" id="invoice-number" class="border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 rounded-lg px-3 py-1.5 w-32 text-right text-slate-900 font-bold bg-white">
+                            </div>
+                            <div class="flex items-center justify-between gap-2">
+                                <label class="text-sm font-medium text-slate-600 whitespace-nowrap">Invoice Date</label>
+                                <input type="date" id="invoice-date" class="border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 rounded-lg px-3 py-1.5 w-40 text-right text-slate-900 bg-white">
+                            </div>
+                            <div class="flex flex-col items-end gap-1">
+                                <div class="flex items-center justify-between gap-2 w-full">
+                                    <label class="text-sm font-medium text-slate-600 whitespace-nowrap">Due Date</label>
+                                    <input type="date" id="due-date" class="border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 rounded-lg px-3 py-1.5 w-40 text-right text-slate-900 bg-white">
+                                </div>
+                                <span id="overdue-warning" class="hidden text-xs font-medium text-amber-600 bg-amber-50 px-2 py-0.5 rounded border border-amber-200 no-print flex items-center gap-1"><i data-lucide="alert-triangle" class="w-3 h-3"></i> Overdue — late fee may apply</span>
+                            </div>
+                            <div class="flex items-center justify-between gap-2 no-print mt-2 pt-2 border-t border-slate-200">
+                                <label class="text-sm font-medium text-slate-600 whitespace-nowrap">Currency</label>
+                                <select id="currency-select" class="border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 rounded-lg px-3 py-1.5 w-32 text-right text-slate-900 bg-white cursor-pointer">
+                                    <option value="$">USD ($)</option>
+                                    <option value="£">GBP (£)</option>
+                                    <option value="€">EUR (€)</option>
+                                    <option value="C$">CAD (C$)</option>
+                                    <option value="A$">AUD (A$)</option>
+                                    <option value="¥">JPY (¥)</option>
+                                    <option value="₹">INR (₹)</option>
+                                    <option value="CHF">CHF (CHF)</option>
+                                    <option value="S$">SGD (S$)</option>
+                                    <option value="MX$">MXN (MX$)</option>
+                                </select>
+                                <p class="text-xs text-slate-400 mt-1">10 currencies supported — select above to update all prices</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Line Items Table -->
+                    <div class="w-full overflow-x-auto mb-4">
+                        <table class="w-full min-w-[600px]">
+                            <thead>
+                                <tr>
+                                    <th class="w-5/12">Description</th>
+                                    <th class="w-1/12 text-center">Qty</th>
+                                    <th class="w-2/12 text-right">Unit Price</th>
+                                    <th class="w-2/12 text-right">Tax %</th>
+                                    <th class="w-2/12 text-right">Line Total</th>
+                                    <th class="w-10 no-print"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="line-items-body">
+                                <!-- Rows rendered via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <button id="add-line-item" class="no-print text-brand-500 border border-brand-500 hover:bg-brand-50 rounded-lg px-4 py-2 text-sm font-medium transition-colors flex items-center gap-2 mb-8">
+                        <i data-lucide="plus" class="w-4 h-4"></i> Add Line Item
+                    </button>
+
+                    <!-- Totals Panel -->
+                    <div id="print-totals" class="ml-auto max-w-xs bg-slate-50 p-4 rounded-lg border border-slate-100 print:bg-transparent print:border-none print:p-0">
+                        <div class="total-row">
+                            <span class="text-slate-600 font-medium">Subtotal</span>
+                            <span id="subtotal-display" class="text-slate-900 font-medium">$0.00</span>
+                        </div>
+                        <div class="total-row">
+                            <span class="text-slate-600 font-medium">Total Tax</span>
+                            <span id="tax-amount-display" class="text-slate-900 font-medium">$0.00</span>
+                        </div>
+                        <div id="late-fee-row" class="total-row hidden">
+                            <span class="text-red-500 font-medium flex items-center gap-1"><i data-lucide="zap" class="w-3 h-3"></i> Late Fee</span>
+                            <span id="late-fee-display" class="text-red-500 font-medium">$0.00</span>
+                        </div>
+                        <div class="grand-total flex justify-between items-center mt-3 pt-3 border-t-2 border-slate-200 print:border-brand-500">
+                            <span class="text-slate-900 font-bold text-lg">TOTAL DUE</span>
+                            <span id="grand-total-display" class="text-brand-500 font-bold text-xl">$0.00</span>
+                        </div>
+                    </div>
+
+                    <!-- Late Payment Fee Calculator (Accordion) -->
+                    <div class="late-fee-accordion mt-6 border border-slate-200 rounded-lg overflow-hidden no-print bg-white">
+                        <button class="accordion-toggle w-full flex items-center justify-between px-4 py-3 bg-slate-50 hover:bg-slate-100 transition-colors text-left">
+                            <span class="font-semibold text-slate-800 flex items-center gap-2"><i data-lucide="calculator" class="w-4 h-4 text-brand-500"></i> Late Payment Fee Calculator</span>
+                            <i data-lucide="chevron-down" class="w-5 h-5 text-slate-500"></i>
+                        </button>
+                        <div class="accordion-body max-h-0 overflow-hidden bg-white">
+                            <div class="p-4 border-t border-slate-200 flex flex-col gap-4">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div class="flex flex-col gap-1">
+                                        <label class="text-xs font-medium text-slate-600">Jurisdiction / Rate</label>
+                                        <select id="jurisdiction-select" class="border border-slate-300 focus:ring-2 focus:ring-brand-500 rounded-lg px-3 py-2 text-sm text-slate-800 bg-white">
+                                            <option value="us">US Average (1.5% / month)</option>
+                                            <option value="uk">UK Statutory (8% + Base Rate)</option>
+                                            <option value="eu">EU Directive (ECB Rate + 8%)</option>
+                                            <option value="flat">Custom Flat Fee</option>
+                                        </select>
+                                    </div>
+                                    <div id="custom-rate-container" class="flex flex-col gap-1 hidden">
+                                        <label class="text-xs font-medium text-slate-600">Custom Amount</label>
+                                        <input type="number" id="custom-rate" placeholder="0.00" min="0" step="0.01" class="border border-slate-300 focus:ring-2 focus:ring-brand-500 rounded-lg px-3 py-2 text-sm text-slate-800">
+                                    </div>
+                                    <div class="flex flex-col gap-1 justify-end">
+                                        <div class="bg-slate-100 border border-slate-200 rounded-lg px-3 py-2 flex justify-between items-center h-[38px]">
+                                            <span class="text-xs font-medium text-slate-500">Calculated Fee:</span>
+                                            <span id="calc-preview" class="text-sm font-bold text-slate-900">$0.00</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button id="apply-late-fee" class="w-full sm:w-auto self-end bg-slate-800 hover:bg-slate-900 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                                    Apply to Invoice
+                                </button>
+                                <div class="bg-amber-50 border border-amber-200 text-amber-800 text-xs rounded-lg p-3 leading-relaxed">
+                                    <strong>Note:</strong> UK rate uses 8% + Bank of England base rate (approx. 4.5% as of mid-2026). EU rate uses ECB reference rate + 8% per Directive 2011/7/EU. Verify current rates at bankofengland.co.uk and ecb.europa.eu.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Notes & Payment Terms -->
+                    <div id="print-notes" class="mt-8">
+                        <label class="block text-sm font-semibold text-slate-700 mb-2 no-print">Notes / Payment Terms</label>
+                        <textarea id="invoice-notes" rows="3" placeholder="Thank you for your business. Payment is due within 30 days." class="border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 rounded-lg px-3 py-2 w-full text-slate-600 text-sm resize-none"></textarea>
+                        
+                        <div class="quick-fill-buttons flex flex-wrap gap-2 mt-2 no-print">
+                            <button data-fill="net30" class="text-[11px] font-medium bg-slate-100 hover:bg-slate-200 text-slate-600 px-2.5 py-1 rounded border border-slate-200 transition-colors">Net 30 Terms</button>
+                            <button data-fill="uk" class="text-[11px] font-medium bg-slate-100 hover:bg-slate-200 text-slate-600 px-2.5 py-1 rounded border border-slate-200 transition-colors">UK Late Payment Clause</button>
+                            <button data-fill="eu" class="text-[11px] font-medium bg-slate-100 hover:bg-slate-200 text-slate-600 px-2.5 py-1 rounded border border-slate-200 transition-colors">EU Directive Clause</button>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons Row -->
+                    <div class="action-buttons-row flex flex-wrap gap-3 justify-end mt-8 pt-6 border-t border-slate-200 no-print">
+                        <button id="btn-clear" class="px-4 py-2 text-sm font-medium text-slate-500 hover:text-red-500 transition-colors flex items-center gap-2 mr-auto">
+                            <i data-lucide="rotate-ccw" class="w-4 h-4"></i> Clear All
+                        </button>
+                        <button id="btn-demand-letter" class="px-4 py-2 text-sm font-medium border border-brand-500 text-brand-500 hover:bg-brand-50 rounded-lg transition-colors flex items-center gap-2 shadow-sm">
+                            <i data-lucide="mail" class="w-4 h-4"></i> Generate Demand Letter
+                        </button>
+                        <button id="btn-print" class="px-6 py-2 text-sm font-medium bg-brand-500 hover:bg-brand-600 text-white rounded-lg transition-colors flex items-center gap-2 shadow-sm">
+                            <i data-lucide="printer" class="w-4 h-4"></i> Download PDF
+                        </button>
+                    </div>
+
+                    <!-- Print Footer -->
+                    <div id="print-footer" class="hidden print:block">
+                        Generated by GetInvoicePDF.com
+                    </div>
+                </div>
+
+                <!-- [E-DL] DEMAND LETTER ENGINE -->
+                <div id="demand-letter-engine" class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden no-print">
+                    <button class="accordion-toggle w-full flex items-center justify-between px-6 py-4 bg-slate-50 hover:bg-slate-100 transition-colors text-left border-b border-slate-200">
+                        <span class="font-bold text-slate-900 flex items-center gap-2"><i data-lucide="mail-warning" class="w-5 h-5 text-brand-500"></i> Demand Letter Generator</span>
+                        <i data-lucide="chevron-down" class="w-5 h-5 text-slate-500"></i>
+                    </button>
+                    <div class="accordion-body max-h-0 overflow-hidden bg-white">
+                        <div class="p-6 flex flex-col gap-4">
+                            <p class="text-sm text-slate-500">Automatically generate a professional follow-up email or formal demand letter based on your current invoice data.</p>
+                            
+                            <div class="tone-tabs flex bg-slate-100 p-1 rounded-lg self-start">
+                                <button data-tone="polite" class="tone-btn active px-4 py-1.5 text-sm font-medium rounded-md bg-white text-slate-900 shadow-sm transition-all">Polite Reminder</button>
+                                <button data-tone="firm" class="tone-btn px-4 py-1.5 text-sm font-medium rounded-md text-slate-600 hover:text-slate-900 transition-all">Firm Notice</button>
+                                <button data-tone="final" class="tone-btn px-4 py-1.5 text-sm font-medium rounded-md text-slate-600 hover:text-slate-900 transition-all">Final Demand</button>
+                            </div>
+
+                            <textarea id="demand-letter-output" rows="12" class="w-full border border-slate-300 rounded-lg p-4 font-mono text-sm text-slate-800 bg-slate-50 focus:ring-2 focus:ring-brand-500 focus:bg-white transition-colors resize-y" readonly></textarea>
+
+                            <div class="flex justify-end gap-3 action-buttons-row">
+                                <button id="btn-copy-letter" class="px-4 py-2 text-sm font-medium border border-slate-300 text-slate-700 hover:bg-slate-50 rounded-lg transition-colors flex items-center gap-2">
+                                    <i data-lucide="copy" class="w-4 h-4"></i> <span>Copy to Clipboard</span>
+                                </button>
+                                <button id="btn-print-letter" class="px-4 py-2 text-sm font-medium bg-slate-800 hover:bg-slate-900 text-white rounded-lg transition-colors flex items-center gap-2">
+                                    <i data-lucide="printer" class="w-4 h-4"></i> Print Letter
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RIGHT COLUMN: SIDEBAR AD -->
+            <aside class="hidden lg:block w-[300px] shrink-0">
+                <div id="ad-sidebar" class="sticky top-[88px] w-full bg-slate-50 border border-slate-200 rounded-xl p-4 flex flex-col items-center" style="min-height: 600px; min-width: 160px;">
+                    <span class="text-[10px] text-slate-400 uppercase tracking-wider mb-2">Advertisement</span>
+                    <div class="w-full h-full min-h-[500px] bg-slate-200 flex items-center justify-center text-slate-400 text-sm rounded mb-4">
+                        <!-- AdSense Code Placeholder -->
+                        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="XXXXXXXXXX" data-ad-format="auto" data-full-width-responsive="true"></ins>
+                        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                    </div>
+                    
+                    <!-- Trust Box below Ad -->
+                    <div class="w-full bg-white border border-slate-200 rounded-lg p-4 mt-auto">
+                        <h4 class="text-sm font-bold text-slate-900 mb-3">Why use GetInvoicePDF?</h4>
+                        <ul class="flex flex-col gap-2 text-sm text-slate-600">
+                            <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-500 mt-0.5 shrink-0"></i> No account required</li>
+                            <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-500 mt-0.5 shrink-0"></i> 100% free forever</li>
+                            <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-500 mt-0.5 shrink-0"></i> Data stays on your device</li>
+                            <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-500 mt-0.5 shrink-0"></i> Built-in late fee calculator</li>
+                        </ul>
+                    </div>
+                </div>
+            </aside>
+
+        </div>
+    </main>
+
+    <!-- [F] ADSENSE BANNER - SLOT 3 -->
+    <section id="ad-banner-2" class="w-full bg-slate-50 border-y border-slate-200 py-6 flex flex-col items-center justify-center mb-16" style="min-height: 250px;">
+        <span class="text-[10px] text-slate-400 uppercase tracking-wider mb-2">Advertisement</span>
+        <div style="min-width: 320px; min-height: 100px;" class="md:min-w-[728px] md:min-h-[90px] bg-slate-200 flex items-center justify-center text-slate-400 text-sm rounded">
+            <!-- AdSense Code Placeholder -->
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="XXXXXXXXXX" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+    </section>
+
+    <!-- [G] SEO CONTENT ARTICLE -->
+    <article class="seo-article max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+        <h2 class="text-2xl font-bold text-slate-900 mt-10 mb-3 border-l-4 border-brand-500 pl-4">What Makes a Professional Invoice: The Anatomy Every Freelancer Needs to Know</h2>
+        <p class="text-slate-600 leading-relaxed mb-4">Before you generate anything, it helps to understand what separates a professional invoice from one that gets ignored, questioned, or paid late. Courts, accountants, and clients all respond better to invoices that follow a recognised structure. Missing even one element can give a slow-paying client a reason to delay.</p>
+        
+        <h3 class="text-lg font-semibold text-slate-800 mt-6 mb-2">The 10 Essential Elements of a Legally Sound Invoice</h3>
+        <ol class="space-y-3 mb-6 pl-5">
+            <li class="text-slate-600 leading-relaxed"><strong class="text-slate-900 font-semibold">Your Full Legal Name or Business Name:</strong> This must exactly match the name on your bank account. If you operate as a sole trader under your personal name, use that. If you have a registered business, use the registered name. Mismatches cause payment delays and accounting problems for your client.</li>
+            <li class="text-slate-600 leading-relaxed"><strong class="text-slate-900 font-semibold">Your Contact Details:</strong> Include your address, email, and phone number. For international clients, include your country code. This isn't optional — many jurisdictions require supplier contact information for a document to qualify as a valid invoice for tax purposes.</li>
+            <li class="text-slate-600 leading-relaxed"><strong class="text-slate-900 font-semibold">Your Client's Full Name and Billing Address:</strong> Don't just write "Acme Corp." Get the correct legal entity name and the specific billing address (which is often different from the office address). Wrong billing details are the number one reason accounts payable departments return invoices unpaid.</li>
+            <li class="text-slate-600 leading-relaxed"><strong class="text-slate-900 font-semibold">A Unique Invoice Number:</strong> Every invoice must have a sequential, unique reference number. A simple format like INV-001, INV-002 works perfectly. This number is how your client's accounting system will process and track your payment. Without it, many corporate clients literally cannot raise a purchase order or process your invoice in their system.</li>
+            <li class="text-slate-600 leading-relaxed"><strong class="text-slate-900 font-semibold">Invoice Date and Payment Due Date:</strong> The invoice date is when you issued the invoice. The payment due date is calculated from your agreed payment terms (see the Net 30 section below). Both dates must appear explicitly — "due on receipt" is legally vague and professionally weak.</li>
+            <li class="text-slate-600 leading-relaxed"><strong class="text-slate-900 font-semibold">Itemised Description of Services or Goods:</strong> List each deliverable, the quantity, unit price, and line total. Vague descriptions like "web work — $1,500" invite disputes. "Website homepage redesign (1 unit) — $1,500" is clear, complete, and professional.</li>
+            <li class="text-slate-600 leading-relaxed"><strong class="text-slate-900 font-semibold">Subtotal, Applicable Taxes, and Grand Total:</strong> Show your pre-tax subtotal, then any applicable sales tax (US), VAT (UK/EU), or GST (Australia/Canada) as a separate line, then the final total. Many clients cannot reclaim tax unless it is itemised separately with the correct tax code or registration number.</li>
+            <li class="text-slate-600 leading-relaxed"><strong class="text-slate-900 font-semibold">Your Tax ID or VAT/GST Registration Number:</strong> If you are VAT-registered in the UK or EU, this is a legal requirement — not a preference. US freelancers above certain income thresholds may need to include their EIN. Check your local obligations if you are unsure.</li>
+            <li class="text-slate-600 leading-relaxed"><strong class="text-slate-900 font-semibold">Payment Method Details:</strong> Include every method you accept: bank transfer details (account number, sort code, IBAN/SWIFT for international), PayPal email, Wise handle, or Stripe payment link. The harder you make it to pay you, the slower you get paid.</li>
+            <li class="text-slate-600 leading-relaxed"><strong class="text-slate-900 font-semibold">Your Late Payment Fee Terms:</strong> This is the clause most freelancers omit and later regret. State clearly: <em>"Invoices unpaid after [due date] will accrue a late payment fee of [X%] per [month/annum], calculated from the due date."</em> We'll cover the legal specifics for each jurisdiction below.</li>
+        </ol>
+
+        <h2 class="text-2xl font-bold text-slate-900 mt-10 mb-3 border-l-4 border-brand-500 pl-4">Understanding Payment Terms: Net 30, Net 15, Net 60, and Due on Receipt</h2>
+        <p class="text-slate-600 leading-relaxed mb-4">Payment terms tell your client exactly when you expect to be paid. They are one of the most misunderstood elements of freelance invoicing, and choosing the wrong terms is a reliable way to damage your cash flow.</p>
+        
+        <h3 class="text-lg font-semibold text-slate-800 mt-6 mb-2">Net 30</h3>
+        <p class="text-slate-600 leading-relaxed mb-4">Net 30 means the invoice is due 30 calendar days from the invoice date. It is the most widely accepted standard in B2B transactions, particularly for corporate clients in the United States. If you invoice on the 1st of the month, payment is due by the 31st. Net 30 is appropriate when you're working with established businesses that have formal accounts payable cycles.</p>
+        
+        <h3 class="text-lg font-semibold text-slate-800 mt-6 mb-2">Net 15</h3>
+        <p class="text-slate-600 leading-relaxed mb-4">Net 15 halves the payment window to 15 days. This is appropriate for smaller clients, single-session work (such as photography or one-day consulting), or clients where you have an established, trust-based relationship. Some freelancers use Net 15 as a default and offer Net 30 only when a client specifically requests it.</p>
+        
+        <h3 class="text-lg font-semibold text-slate-800 mt-6 mb-2">Net 60</h3>
+        <p class="text-slate-600 leading-relaxed mb-4">Net 60 gives the client 60 days to pay. This is largely a corporate preference, not a freelancer-friendly standard. If a large enterprise demands Net 60 terms, you are essentially extending them a two-month interest-free loan. You can accept it — but factor this into your project rate.</p>
+        
+        <h3 class="text-lg font-semibold text-slate-800 mt-6 mb-2">Due on Receipt</h3>
+        <p class="text-slate-600 leading-relaxed mb-4">Technically means the client should pay immediately. In practice, this has no legal force and clients routinely interpret it as "whenever." Reserve it for deposits or small one-off projects with private clients.</p>
+
+        <h2 class="text-2xl font-bold text-slate-900 mt-10 mb-3 border-l-4 border-brand-500 pl-4">Late Payment Fee Laws by Jurisdiction: What You Can Legally Charge</h2>
+        
+        <h3 class="text-lg font-semibold text-slate-800 mt-6 mb-2">United Kingdom: The Late Payment of Commercial Debts Act 1998</h3>
+        <p class="text-slate-600 leading-relaxed mb-4">The UK has some of the most freelancer-friendly late payment legislation in the world. Under the Late Payment of Commercial Debts (Interest) Act 1998, if a business client fails to pay on time, you are automatically entitled to claim statutory interest at 8% per annum above the Bank of England base rate. You can also claim a fixed debt recovery fee on top of the interest (£40 to £100 depending on the debt size). This applies automatically to business-to-business contracts.</p>
+        
+        <h3 class="text-lg font-semibold text-slate-800 mt-6 mb-2">United States: State-Level Late Fee Laws</h3>
+        <p class="text-slate-600 leading-relaxed mb-4">The US does not have a single federal standard for late payment interest on commercial invoices. Instead, each state sets its own maximum allowable interest rate. If your contract or invoice specifies a late fee (e.g., 1.5% per month), courts will generally enforce it as long as it's not unconscionably high. A late fee of 1% to 1.5% per month (equivalent to 12%–18% APR) is widely considered commercially reasonable.</p>
+        
+        <h3 class="text-lg font-semibold text-slate-800 mt-6 mb-2">European Union: The Late Payment Directive (2011/7/EU)</h3>
+        <p class="text-slate-600 leading-relaxed mb-4">The EU Late Payment Directive establishes the right to charge interest at the ECB reference rate plus 8 percentage points. It also allows a minimum flat-rate compensation of €40 per late invoice to cover recovery costs. The Directive sets a maximum payment period of 30 days for public authorities and 60 days for commercial transactions.</p>
+    </article>
+
+    <!-- FAQ SECTION -->
+    <section class="faq-section max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+        <h2 class="text-2xl font-bold text-slate-900 mt-10 mb-6 border-l-4 border-brand-500 pl-4">Frequently Asked Questions</h2>
+        <div class="flex flex-col border-t border-slate-200">
+            
+            <!-- Q1 -->
+            <div class="faq-item border-b border-slate-200">
+                <button class="faq-trigger w-full flex justify-between items-center py-4 text-left font-semibold text-slate-800 hover:text-brand-600 transition-colors">
+                    <span class="font-semibold text-slate-800 text-left text-base">What is the best free invoice generator that creates a PDF with no sign-up required?</span>
+                    <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 shrink-0"></i>
+                </button>
+                <div class="faq-body max-h-0 overflow-hidden">
+                    <p class="text-slate-600 pb-4 leading-relaxed">The best free invoice generator is one that runs entirely in your browser, never sends your data to a server, and exports a professional PDF without asking for your email address or creating an account. <strong>GetInvoicePDF.com</strong> is built on exactly this principle — all processing happens client-side, meaning your invoice data never leaves your device. This matters both for privacy (your client rates and contact details stay on your machine) and for speed (there's no server round-trip, no loading spinner, and no risk of your data appearing in a breach). Most tools that appear free require account creation before you can export. If you just need a professional invoice PDF right now with no friction, a true no-sign-up invoice generator is the only tool that delivers on that promise without conditions.</p>
+                </div>
+            </div>
+
+            <!-- Q2 -->
+            <div class="faq-item border-b border-slate-200">
+                <button class="faq-trigger w-full flex justify-between items-center py-4 text-left font-semibold text-slate-800 hover:text-brand-600 transition-colors">
+                    <span class="font-semibold text-slate-800 text-left text-base">How do I calculate a late payment fee on a freelance invoice?</span>
+                    <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 shrink-0"></i>
+                </button>
+                <div class="faq-body max-h-0 overflow-hidden">
+                    <p class="text-slate-600 pb-4 leading-relaxed">To calculate a late payment fee, you need three numbers: the outstanding invoice amount, your agreed late fee rate (expressed as a monthly or annual percentage), and the number of days the invoice is overdue. The formula for a monthly rate is: <strong>(Invoice Amount × Monthly Rate) × (Days Overdue ÷ 30)</strong>. For example: a $2,000 invoice that is 45 days overdue at 1.5% per month would accrue: ($2,000 × 0.015) × (45 ÷ 30) = $30 × 1.5 = $45 in late fees. For UK statutory interest, the formula changes to an annual rate: <strong>(Invoice Amount × Annual Rate) ÷ 365 × Days Overdue</strong>. Using a dedicated late payment fee calculator for freelance invoices eliminates this arithmetic risk entirely.</p>
+                </div>
+            </div>
+
+            <!-- Q3 -->
+            <div class="faq-item border-b border-slate-200">
+                <button class="faq-trigger w-full flex justify-between items-center py-4 text-left font-semibold text-slate-800 hover:text-brand-600 transition-colors">
+                    <span class="font-semibold text-slate-800 text-left text-base">What should a freelance invoice legally include to enforce payment?</span>
+                    <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 shrink-0"></i>
+                </button>
+                <div class="faq-body max-h-0 overflow-hidden">
+                    <p class="text-slate-600 pb-4 leading-relaxed">For a freelance invoice to be legally enforceable and useful as evidence in a small claims or commercial court, it should include: your full legal name and address, the client's full legal name and address, a unique invoice number, the invoice date, a specific payment due date (not "due on receipt"), an itemised breakdown of services rendered with quantities and unit prices, the total amount due including applicable taxes, your payment details (bank account, PayPal, etc.), and your late payment terms stated clearly. In the UK, if you are VAT-registered, your VAT registration number and the VAT breakdown are mandatory. In the US, if you are operating as an LLC or corporation, using your legal entity name rather than your personal name helps protect you legally.</p>
+                </div>
+            </div>
+
+            <!-- Q4 -->
+            <div class="faq-item border-b border-slate-200">
+                <button class="faq-trigger w-full flex justify-between items-center py-4 text-left font-semibold text-slate-800 hover:text-brand-600 transition-colors">
+                    <span class="font-semibold text-slate-800 text-left text-base">Can I charge a client a late payment fee if I didn't include the terms on the original invoice?</span>
+                    <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 shrink-0"></i>
+                </button>
+                <div class="faq-body max-h-0 overflow-hidden">
+                    <p class="text-slate-600 pb-4 leading-relaxed">This is jurisdiction-dependent. In the UK, the answer is yes — the Late Payment of Commercial Debts Act 1998 grants you the right to statutory interest automatically, whether or not your invoice mentioned it. In the US and most other countries, however, your ability to enforce a specific late fee rate generally depends on whether you communicated those terms before or at the time the contract was formed. If your invoice is the first time a client sees your late fee policy, a US court may decline to enforce it. Best practice is to include late payment terms in every proposal, contract, and invoice consistently.</p>
+                </div>
+            </div>
+
+            <!-- Q5 -->
+            <div class="faq-item border-b border-slate-200">
+                <button class="faq-trigger w-full flex justify-between items-center py-4 text-left font-semibold text-slate-800 hover:text-brand-600 transition-colors">
+                    <span class="font-semibold text-slate-800 text-left text-base">What is the difference between a proforma invoice and a standard invoice for tax purposes?</span>
+                    <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 shrink-0"></i>
+                </button>
+                <div class="faq-body max-h-0 overflow-hidden">
+                    <p class="text-slate-600 pb-4 leading-relaxed">A proforma invoice is a preliminary document — a statement of what you intend to charge before the transaction is confirmed. It has no legal status as a demand for payment and cannot be used to record a sale in your accounting system or by your client for VAT/tax purposes. A standard (or "commercial") invoice, by contrast, records a completed transaction, triggers the payment obligation, and is the document your accountant and your client's accountant will use. Never use a proforma when you mean to actually request payment — if your client's accounts payable team receives a proforma, they will not process it.</p>
+                </div>
+            </div>
+
+            <!-- Q6 -->
+            <div class="faq-item border-b border-slate-200">
+                <button class="faq-trigger w-full flex justify-between items-center py-4 text-left font-semibold text-slate-800 hover:text-brand-600 transition-colors">
+                    <span class="font-semibold text-slate-800 text-left text-base">How do I invoice an international client — their currency or mine?</span>
+                    <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 shrink-0"></i>
+                </button>
+                <div class="faq-body max-h-0 overflow-hidden">
+                    <p class="text-slate-600 pb-4 leading-relaxed">Invoicing international clients involves two decisions: currency and tax. On currency, the short answer is: invoice in whichever currency your contract specifies. If you're a UK freelancer billing a US client, invoicing in USD protects you if the dollar is strong; invoicing in GBP puts the exchange rate risk on them. Many freelancers default to USD for international work because it's the de facto global commercial currency. Whatever you choose, state the currency explicitly (write "USD $2,000" not just "$2,000"). On tax: you generally do not charge your local VAT or sales tax on exports to foreign business clients, but you should confirm this with an accountant.</p>
+                </div>
+            </div>
+
+            <!-- Q7 -->
+            <div class="faq-item border-b border-slate-200">
+                <button class="faq-trigger w-full flex justify-between items-center py-4 text-left font-semibold text-slate-800 hover:text-brand-600 transition-colors">
+                    <span class="font-semibold text-slate-800 text-left text-base">What is a commercial invoice template with late fee terms and when do I need one?</span>
+                    <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 shrink-0"></i>
+                </button>
+                <div class="faq-body max-h-0 overflow-hidden">
+                    <p class="text-slate-600 pb-4 leading-relaxed">A commercial invoice template with late fee terms is simply a pre-formatted invoice that includes a late payment clause pre-written in the footer or terms section — so you don't have to draft legal language from scratch every time. It's particularly useful for freelancers who invoice regularly and want a consistent, professional document that functions both as a payment request and as a legal notice of your late fee policy. Having your late fee terms printed on every invoice — even if you never enforce them — demonstrably shortens average payment times.</p>
+                </div>
+            </div>
+
+            <!-- Q8 -->
+            <div class="faq-item border-b border-slate-200">
+                <button class="faq-trigger w-full flex justify-between items-center py-4 text-left font-semibold text-slate-800 hover:text-brand-600 transition-colors">
+                    <span class="font-semibold text-slate-800 text-left text-base">How do I charge a client for a late payment fee without damaging the business relationship?</span>
+                    <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 shrink-0"></i>
+                </button>
+                <div class="faq-body max-h-0 overflow-hidden">
+                    <p class="text-slate-600 pb-4 leading-relaxed">The key is framing and timing. First, never introduce the late payment fee as a surprise — state it in your contract, your proposal, and your invoice terms so the client is aware of it from the beginning. When a payment is late, send a friendly reminder first (at Day 1 overdue) that doesn't mention fees at all. At Day 7-14, escalate to a firmer message that references your invoice terms. Only formally apply and invoice the late fee if payment is still absent at Day 30 or beyond. When you do raise the late fee, issue a separate supplementary invoice. Frame it as policy, not personal — "our standard terms" rather than "because you didn't pay."</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- [H] FOOTER -->
+    <footer class="w-full bg-slate-900 text-slate-400 py-12 px-6 no-print">
+        <div class="max-w-7xl mx-auto flex flex-col gap-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="flex items-center gap-2 text-white">
+                    <i data-lucide="zap" class="w-6 h-6 text-brand-500 fill-brand-500"></i>
+                    <span class="font-bold text-xl tracking-tight">GetInvoicePDF<span class="text-brand-500">.com</span></span>
+                </div>
+                <div class="flex gap-6 text-sm font-medium">
+                    <a href="#" class="hover:text-white transition-colors" onclick="document.getElementById('contact-modal').classList.remove('hidden'); return false;">Contact</a>
+                    <a href="#" class="hover:text-white transition-colors" onclick="document.getElementById('privacy-modal').classList.remove('hidden'); return false;">Privacy Policy</a>
+                    <a href="#" class="hover:text-white transition-colors" onclick="document.getElementById('terms-modal').classList.remove('hidden'); return false;">Terms of Service</a>
+                </div>
+            </div>
+            <p class="text-sm max-w-2xl text-center md:text-left text-slate-500">
+                GetInvoicePDF.com is a free, browser-based invoice generator built for freelancers, consultants, and small business owners. All processing happens entirely on your device — we never store, transmit, or access your invoice data.
+            </p>
+            <div class="border-t border-slate-800 pt-8 text-sm text-center md:text-left flex flex-col md:flex-row justify-between items-center gap-4">
+                <span>&copy; 2026 GetInvoicePDF.com &middot; Built for freelancers, by freelancers &middot; All rights reserved.</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODALS -->
+    <!-- Contact Modal -->
+    <div id="contact-modal" class="hidden fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 no-print">
+        <div class="bg-white rounded-2xl p-8 max-w-md w-full shadow-xl relative">
+            <button class="modal-close absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <h3 class="text-xl font-bold text-slate-900 mb-4">Contact Us</h3>
+            <p class="text-sm text-slate-600 mb-6">Have a question or feedback? Send us a message below or email us directly at <a href="mailto:support.getinvoicepdf@gmail.com" class="text-brand-500 hover:underline">support.getinvoicepdf@gmail.com</a>.</p>
+            <form id="contact-form" class="flex flex-col gap-4">
+                <div>
+                    <input type="text" id="contact-name" placeholder="Your Name" class="border border-slate-300 focus:ring-2 focus:ring-brand-500 rounded-lg px-3 py-2 w-full text-slate-800 text-sm">
+                    <span class="error-msg hidden text-red-500 text-xs mt-1">Name must be at least 2 characters.</span>
+                </div>
+                <div>
+                    <input type="email" id="contact-email" placeholder="Your Email" class="border border-slate-300 focus:ring-2 focus:ring-brand-500 rounded-lg px-3 py-2 w-full text-slate-800 text-sm">
+                    <span class="error-msg hidden text-red-500 text-xs mt-1">Please enter a valid email address.</span>
+                </div>
+                <div>
+                    <input type="text" id="contact-subject" placeholder="Subject" class="border border-slate-300 focus:ring-2 focus:ring-brand-500 rounded-lg px-3 py-2 w-full text-slate-800 text-sm">
+                    <span class="error-msg hidden text-red-500 text-xs mt-1">Subject is required.</span>
+                </div>
+                <div>
+                    <textarea id="contact-message" rows="4" placeholder="Your Message" class="border border-slate-300 focus:ring-2 focus:ring-brand-500 rounded-lg px-3 py-2 w-full text-slate-800 text-sm resize-none"></textarea>
+                    <span class="error-msg hidden text-red-500 text-xs mt-1">Message must be at least 20 characters.</span>
+                </div>
+                <button type="submit" class="bg-brand-500 hover:bg-brand-600 text-white font-medium py-2 rounded-lg transition-colors mt-2">Send Message</button>
+            </form>
+            <div id="contact-success" class="hidden text-center py-8">
+                <div class="w-12 h-12 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-4"><i data-lucide="check" class="w-6 h-6"></i></div>
+                <h4 class="text-lg font-bold text-slate-900 mb-2">Message Sent!</h4>
+                <p class="text-sm text-slate-600">Thanks, <span id="success-name"></span>! We'll get back to you within 24 hours.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Privacy Policy Modal -->
+    <div id="privacy-modal" class="hidden fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 no-print">
+        <div class="bg-white rounded-2xl p-8 max-w-2xl w-full shadow-xl relative max-h-[90vh] overflow-y-auto">
+            <button class="modal-close absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <h3 class="text-xl font-bold text-slate-900 mb-4">Privacy Policy</h3>
+            <div class="prose prose-sm text-slate-600">
+                <p>Last updated: June 2026</p>
+                <p>GetInvoicePDF.com is designed with privacy as a core principle. <strong>We do not store, transmit, or access any of the data you enter into the invoice generator.</strong> All processing, PDF generation, and calculations happen entirely client-side within your web browser.</p>
+                <p><strong>Data Collection:</strong> We do not collect personal data, email addresses, or financial information. The tool requires no account creation.</p>
+                <p><strong>Cookies and Analytics:</strong> We use standard Google AdSense to display advertisements, which may use cookies to serve personalized ads based on your prior visits to our website or other websites. We may also use basic, anonymized analytics to monitor website traffic and performance.</p>
+                <p><strong>Contact Form:</strong> If you use our contact form, the information provided (name, email, message) is sent directly to our support email (support.getinvoicepdf@gmail.com) and is used solely to respond to your inquiry. It is not added to any marketing lists.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Terms of Service Modal -->
+    <div id="terms-modal" class="hidden fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 no-print">
+        <div class="bg-white rounded-2xl p-8 max-w-2xl w-full shadow-xl relative max-h-[90vh] overflow-y-auto">
+            <button class="modal-close absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <h3 class="text-xl font-bold text-slate-900 mb-4">Terms of Service</h3>
+            <div class="prose prose-sm text-slate-600">
+                <p>Last updated: June 2026</p>
+                <p>By using GetInvoicePDF.com, you agree to these terms. The tool is provided "as-is" and "as available" without any warranties, express or implied.</p>
+                <p><strong>Legal Accuracy:</strong> While we provide templates and calculators for late payment fees and demand letters, we are not a law firm. The information provided does not constitute legal advice. You are solely responsible for verifying that your invoice terms, late fee rates, and demand letters comply with your local jurisdiction's current laws.</p>
+                <p><strong>Liability:</strong> GetInvoicePDF.com and its creators shall not be held liable for any direct, indirect, incidental, or consequential damages resulting from the use or inability to use the service, including but not limited to lost profits, unpaid invoices, or legal disputes with clients.</p>
+                <p><strong>Acceptable Use:</strong> You agree to use the tool only for lawful purposes and to generate legitimate business documents.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed bottom-4 right-4 z-[200] flex flex-col gap-2 no-print"></div>
+
+    <!-- SECTION 4 - JAVASCRIPT ARCHITECTURE -->
+    <script>
+        // --- STATE ---
+        let lineItems = [];
+        let nextId = 1;
+        let currentCurrencySymbol = '$';
+        let lateFee = 0;
+        let currentTone = 'polite';
+        const originalTitle = document.title;
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            setDefaultDates();
+            addLineItem(); // Add one blank line item on load
+            initAllAccordions();
+            initModals();
+            initLogoUpload();
+            initContactForm();
+            initCurrencySelect();
+            initToneButtons();
+            initQuickFillButtons();
+            initPrintButton();
+            initDemandLetterButton();
+            initClearButton();
+            initJurisdictionSelect();
+            
+            // Add listeners for live recalculation
+            document.getElementById('invoice-date').addEventListener('change', updateDueDateWarning);
+            document.getElementById('due-date').addEventListener('change', updateDueDateWarning);
+            
+            // Demand letter copy/print
+            document.getElementById('btn-copy-letter').addEventListener('click', copyToClipboard);
+            document.getElementById('btn-print-letter').addEventListener('click', printDemandLetter);
+
+            // Late fee apply
+            document.getElementById('apply-late-fee').addEventListener('click', applyLateFee);
+            
+            // Live preview for late fee calculator
+            document.getElementById('jurisdiction-select').addEventListener('change', updateLateFeePreview);
+            document.getElementById('custom-rate').addEventListener('input', updateLateFeePreview);
+
+            recalculateTotals();
+        });
+
+        // --- FUNCTIONS ---
+
+        function setDefaultDates() {
+            const today = new Date();
+            const due = new Date(today);
+            due.setDate(today.getDate() + 30);
+            
+            document.getElementById('invoice-date').value = today.toISOString().split('T')[0];
+            document.getElementById('due-date').value = due.toISOString().split('T')[0];
+            
+            // Auto-generate invoice number
+            document.getElementById('invoice-number').value = "INV-" + Date.now().toString().slice(-5);
+            updateDueDateWarning();
+        }
+
+        function addLineItem() {
+            lineItems.push({
+                id: nextId++,
+                description: '',
+                qty: 1,
+                unitPrice: 0,
+                taxRate: 0
+            });
+            renderLineItems();
+        }
+
+        function deleteLineItem(id) {
+            lineItems = lineItems.filter(item => item.id !== id);
+            if (lineItems.length === 0) addLineItem(); // Keep at least one row
+            else renderLineItems();
+        }
+
+        function updateLineItem(id, field, value) {
+            const item = lineItems.find(i => i.id === id);
+            if (item) {
+                item[field] = field === 'description' ? value : parseFloat(value) || 0;
+                
+                // Update line total display immediately
+                const row = document.querySelector(`tr[data-id="${id}"]`);
+                if (row) {
+                    const lineTotal = item.qty * item.unitPrice;
+                    row.querySelector('.line-total-display').textContent = formatCurrency(lineTotal);
+                }
+                recalculateTotals();
+            }
+        }
+
+        function renderLineItems() {
+            const tbody = document.getElementById('line-items-body');
+            tbody.innerHTML = '';
+            
+            lineItems.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.setAttribute('data-id', item.id);
+                tr.className = "group";
+                
+                const lineTotal = item.qty * item.unitPrice;
+
+                tr.innerHTML = `
+                    <td class="p-1 border-b border-slate-100 print:border-slate-200">
+                        <input type="text" placeholder="Item description" value="${item.description}" 
+                            oninput="updateLineItem(${item.id}, 'description', this.value)"
+                            class="w-full border border-transparent hover:border-slate-300 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 rounded px-2 py-1.5 text-sm text-slate-800 bg-transparent transition-colors">
+                    </td>
+                    <td class="p-1 border-b border-slate-100 print:border-slate-200">
+                        <input type="number" min="0" step="1" value="${item.qty}" 
+                            oninput="updateLineItem(${item.id}, 'qty', this.value)"
+                            class="w-full border border-transparent hover:border-slate-300 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 rounded px-2 py-1.5 text-sm text-slate-800 bg-transparent text-center transition-colors">
+                    </td>
+                    <td class="p-1 border-b border-slate-100 print:border-slate-200">
+                        <div class="flex items-center justify-end">
+                            <span class="text-sm text-slate-800 mr-1">${currentCurrencySymbol}</span>
+                            <input type="number" min="0" step="0.01" value="${item.unitPrice || ''}" placeholder="0.00"
+                                oninput="updateLineItem(${item.id}, 'unitPrice', this.value)"
+                                class="w-[80px] border border-transparent hover:border-slate-300 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 rounded px-2 py-1.5 text-sm text-slate-800 bg-transparent text-right transition-colors print:w-auto">
+                        </div>
+                    </td>
+                    <td class="p-1 border-b border-slate-100 print:border-slate-200">
+                        <input type="number" min="0" step="0.1" value="${item.taxRate || ''}" placeholder="0"
+                            oninput="updateLineItem(${item.id}, 'taxRate', this.value)"
+                            class="w-full border border-transparent hover:border-slate-300 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 rounded px-2 py-1.5 text-sm text-slate-800 bg-transparent text-right transition-colors">
+                    </td>
+                    <td class="p-1 border-b border-slate-100 print:border-slate-200 text-right px-3 text-sm font-medium text-slate-800 line-total-display">
+                        ${formatCurrency(lineTotal)}
+                    </td>
+                    <td class="p-1 border-b border-slate-100 text-center no-print w-10">
+                        <button onclick="deleteLineItem(${item.id})" class="text-slate-300 hover:text-red-500 transition-colors p-1 opacity-0 group-hover:opacity-100 focus:opacity-100">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+            lucide.createIcons();
+            recalculateTotals();
+        }
+
+        function recalculateTotals() {
+            let subtotal = 0;
+            let totalTax = 0;
+
+            lineItems.forEach(item => {
+                const lineTotal = item.qty * item.unitPrice;
+                subtotal += lineTotal;
+                totalTax += lineTotal * (item.taxRate / 100);
+            });
+
+            const grandTotal = subtotal + totalTax + lateFee;
+
+            document.getElementById('subtotal-display').textContent = formatCurrency(subtotal);
+            document.getElementById('tax-amount-display').textContent = formatCurrency(totalTax);
+            
+            const lateFeeRow = document.getElementById('late-fee-row');
+            if (lateFee > 0) {
+                lateFeeRow.classList.remove('hidden');
+                lateFeeRow.classList.add('flex');
+                document.getElementById('late-fee-display').textContent = formatCurrency(lateFee);
+            } else {
+                lateFeeRow.classList.add('hidden');
+                lateFeeRow.classList.remove('flex');
+            }
+
+            document.getElementById('grand-total-display').textContent = formatCurrency(grandTotal);
+            
+            updateLateFeePreview(); // Update preview if subtotal changes
+        }
+
+        function getDaysLate() {
+            const dueDateStr = document.getElementById('due-date').value;
+            if (!dueDateStr) return 0;
+            const dueDate = new Date(dueDateStr);
+            const today = new Date();
+            // Reset times to midnight for accurate day calculation
+            dueDate.setHours(0,0,0,0);
+            today.setHours(0,0,0,0);
+            
+            const diffTime = today - dueDate;
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            return Math.max(0, diffDays);
+        }
+
+        function updateDueDateWarning() {
+            const daysLate = getDaysLate();
+            const warning = document.getElementById('overdue-warning');
+            if (daysLate > 0) {
+                warning.classList.remove('hidden');
+                warning.innerHTML = `<i data-lucide="alert-triangle" class="w-3 h-3"></i> Overdue by ${daysLate} day${daysLate > 1 ? 's' : ''}`;
+                lucide.createIcons();
+            } else {
+                warning.classList.add('hidden');
+            }
+        }
+
+        function calculateLateFee() {
+            const jurisdiction = document.getElementById('jurisdiction-select').value;
+            const daysLate = getDaysLate();
+            
+            // Calculate subtotal
+            let subtotal = 0;
+            lineItems.forEach(item => subtotal += (item.qty * item.unitPrice));
+
+            if (daysLate <= 0 || subtotal <= 0) return 0;
+
+            let fee = 0;
+            if (jurisdiction === 'us') {
+                const monthlyRate = 0.015;
+                fee = subtotal * monthlyRate * (daysLate / 30);
+            } else if (jurisdiction === 'uk') {
+                const annualRate = 0.08 + 0.045; // 8% + 4.5% base
+                fee = (subtotal * annualRate / 365) * daysLate;
+            } else if (jurisdiction === 'eu') {
+                const annualRate = 0.08 + 0.04; // 8% + 4.0% ECB
+                fee = (subtotal * annualRate / 365) * daysLate;
+            } else if (jurisdiction === 'flat') {
+                const customRate = parseFloat(document.getElementById('custom-rate').value) || 0;
+                fee = customRate; // Flat fee is just the amount entered, or could be annual %. Prompt says "Custom Flat Fee" but label says "Custom Annual Rate (%)". Let's treat it as a flat amount for simplicity if it's called "Flat Fee", but prompt logic says "lateFee = parseFloat(customRate)".
+            }
+            return fee;
+        }
+
+        function updateLateFeePreview() {
+            const fee = calculateLateFee();
+            document.getElementById('calc-preview').textContent = formatCurrency(fee);
+        }
+
+        function applyLateFee() {
+            const fee = calculateLateFee();
+            if (fee > 0) {
+                lateFee = fee;
+                recalculateTotals();
+                showToast(`Late fee of ${formatCurrency(fee)} added to invoice.`, 'success');
+            } else {
+                showToast("Invoice is not overdue or subtotal is 0.", 'info');
+            }
+        }
+
+        function generateDemandLetter(tone) {
+            const senderName = document.getElementById('sender-name').value || '[Your Name]';
+            const senderEmail = document.getElementById('sender-email').value.trim() || 'support.getinvoicepdf@gmail.com';
+            const clientName = document.getElementById('client-name').value || '[Client Name]';
+            const invoiceNumber = document.getElementById('invoice-number').value || '[Invoice Number]';
+            const invoiceDate = document.getElementById('invoice-date').value || '[Invoice Date]';
+            const dueDate = document.getElementById('due-date').value || '[Due Date]';
+            const daysLate = getDaysLate() || '[X]';
+            const grandTotal = document.getElementById('grand-total-display').textContent;
+
+            let letter = '';
+
+            if (tone === 'polite') {
+                letter = `Subject: Friendly Payment Reminder — Invoice ${invoiceNumber}\n\nDear ${clientName},\n\nI hope this message finds you well. I'm writing to kindly follow up on Invoice ${invoiceNumber}, dated ${invoiceDate}, for ${grandTotal}, which was due on ${dueDate}.\n\nIt's possible this has slipped through the cracks, and I completely understand how busy things can get. Could you please arrange payment at your earliest convenience, or let me know if there are any issues with the invoice?\n\nPayment details are included on the original invoice. Please don't hesitate to reach out if you have any questions.\n\nThank you for your time, and I look forward to hearing from you.\n\nWarm regards,\n${senderName}`;
+            } else if (tone === 'firm') {
+                letter = `Subject: Payment Required — Invoice ${invoiceNumber} (${daysLate} Days Overdue)\n\nDear ${clientName},\n\nI am writing to formally notify you that Invoice ${invoiceNumber}, dated ${invoiceDate}, for ${grandTotal} remains unpaid. Payment was due on ${dueDate} — ${daysLate} days ago.\n\nAs stated in the payment terms on the original invoice, a late payment fee is now accruing on the outstanding balance. To avoid further charges, please arrange payment immediately.\n\nIf payment has already been sent, please disregard this notice and share the payment confirmation so I can update my records.\n\nI expect to receive payment or a response within 5 business days.\n\nRegards,\n${senderName}`;
+            } else if (tone === 'final') {
+                letter = `Subject: FINAL NOTICE — Invoice ${invoiceNumber} — Immediate Payment Required\n\nDear ${clientName},\n\nThis is a final demand for payment of Invoice ${invoiceNumber}, dated ${invoiceDate}, for ${grandTotal}, which is now ${daysLate} days overdue.\n\nDespite previous communications, this invoice remains unpaid. Please be advised that if payment is not received within 7 days of this notice, I will have no choice but to pursue recovery through formal channels, including referral to a debt collection agency or initiation of small claims proceedings.\n\nLate payment fees have been accruing in accordance with the payment terms stated on the original invoice and applicable law.\n\nThis is your final opportunity to resolve this matter without further action.\n\n${senderName}\n${senderEmail}`;
+            }
+
+            const output = document.getElementById('demand-letter-output');
+            output.value = letter;
+            
+            // Auto-resize textarea
+            output.style.height = 'auto';
+            output.style.height = (output.scrollHeight) + 'px';
+        }
+
+        function copyToClipboard() {
+            const text = document.getElementById('demand-letter-output').value;
+            if (!text) return;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = document.getElementById('btn-copy-letter');
+                const originalHtml = btn.innerHTML;
+                btn.innerHTML = `<i data-lucide="check" class="w-4 h-4 text-green-500"></i> <span class="text-green-600">Copied!</span>`;
+                lucide.createIcons();
+                setTimeout(() => {
+                    btn.innerHTML = originalHtml;
+                    lucide.createIcons();
+                }, 2000);
+            });
+        }
+
+        function printDemandLetter() {
+            document.body.classList.add('print-letter');
+            window.print();
+            document.body.classList.remove('print-letter');
+        }
+
+        function showToast(message, type) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            let bgClass = 'bg-slate-800';
+            if (type === 'success') bgClass = 'bg-green-500';
+            if (type === 'error') bgClass = 'bg-red-500';
+            if (type === 'info') bgClass = 'bg-brand-500';
+
+            toast.className = `${bgClass} text-white text-sm font-medium px-4 py-3 rounded-lg shadow-lg flex items-center gap-2 toast-enter`;
+            
+            let icon = 'info';
+            if (type === 'success') icon = 'check-circle';
+            if (type === 'error') icon = 'alert-circle';
+            
+            toast.innerHTML = `<i data-lucide="${icon}" class="w-4 h-4"></i> ${message}`;
+            container.appendChild(toast);
+            lucide.createIcons();
+
+            setTimeout(() => {
+                toast.classList.remove('toast-enter');
+                toast.classList.add('toast-exit');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        function initAllAccordions() {
+            document.querySelectorAll('.faq-trigger, .accordion-toggle').forEach(trigger => {
+                trigger.addEventListener('click', () => {
+                    const body = trigger.nextElementSibling;
+                    const icon = trigger.querySelector('.lucide-chevron-down, [data-lucide="chevron-down"]');
+                    
+                    if (body.style.maxHeight) {
+                        body.style.maxHeight = null;
+                        if(icon) icon.style.transform = 'rotate(0deg)';
+                    } else {
+                        body.style.maxHeight = body.scrollHeight + "px";
+                        if(icon) icon.style.transform = 'rotate(180deg)';
+                    }
+                });
+            });
+        }
+
+        function initModals() {
+            const modals = ['contact-modal', 'privacy-modal', 'terms-modal'];
+            
+            modals.forEach(id => {
+                const modal = document.getElementById(id);
+                const closeBtns = modal.querySelectorAll('.modal-close');
+                
+                closeBtns.forEach(btn => {
+                    btn.addEventListener('click', () => modal.classList.add('hidden'));
+                });
+
+                // Close on backdrop click
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) modal.classList.add('hidden');
+                });
+            });
+
+            // Close on ESC
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    modals.forEach(id => document.getElementById(id).classList.add('hidden'));
+                }
+            });
+        }
+
+        function initLogoUpload() {
+            const input = document.getElementById('logo-upload');
+            const preview = document.getElementById('logo-preview');
+            const printImg = document.getElementById('print-logo-img');
+            const removeBtn = document.getElementById('remove-logo');
+            const label = document.querySelector('label[for="logo-upload"]');
+
+            input.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const url = URL.createObjectURL(file);
+                    preview.src = url;
+                    printImg.src = url;
+                    preview.classList.remove('hidden');
+                    label.classList.add('hidden');
+                    removeBtn.classList.remove('hidden');
+                }
+            });
+
+            removeBtn.addEventListener('click', () => {
+                input.value = '';
+                preview.src = '';
+                printImg.src = '';
+                preview.classList.add('hidden');
+                label.classList.remove('hidden');
+                removeBtn.classList.add('hidden');
+            });
+        }
+
+        function validateEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        function initContactForm() {
+            const form = document.getElementById('contact-form');
+            const successDiv = document.getElementById('contact-success');
+            
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                let isValid = true;
+                
+                const name = document.getElementById('contact-name');
+                const email = document.getElementById('contact-email');
+                const subject = document.getElementById('contact-subject');
+                const message = document.getElementById('contact-message');
+
+                // Reset errors
+                form.querySelectorAll('.error-msg').forEach(el => el.classList.add('hidden'));
+                [name, email, subject, message].forEach(el => el.classList.remove('border-red-500'));
+
+                if (name.value.trim().length < 2) {
+                    name.nextElementSibling.classList.remove('hidden');
+                    name.classList.add('border-red-500');
+                    isValid = false;
+                }
+                if (!validateEmail(email.value)) {
+                    email.nextElementSibling.classList.remove('hidden');
+                    email.classList.add('border-red-500');
+                    isValid = false;
+                }
+                if (subject.value.trim().length === 0) {
+                    subject.nextElementSibling.classList.remove('hidden');
+                    subject.classList.add('border-red-500');
+                    isValid = false;
+                }
+                if (message.value.trim().length < 20) {
+                    message.nextElementSibling.classList.remove('hidden');
+                    message.classList.add('border-red-500');
+                    isValid = false;
+                }
+
+                if (isValid) {
+                    form.classList.add('hidden');
+                    document.getElementById('success-name').textContent = name.value.trim();
+                    successDiv.classList.remove('hidden');
+                    // No actual POST as per requirements
+                }
+            });
+        }
+
+        function initCurrencySelect() {
+            const select = document.getElementById('currency-select');
+            select.addEventListener('change', (e) => {
+                currentCurrencySymbol = e.target.value;
+                renderLineItems(); // Re-render to update symbols
+            });
+        }
+
+        function formatCurrency(amount) {
+            // Simple formatting: symbol + 2 decimal places
+            return currentCurrencySymbol + parseFloat(amount).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        function initPrintButton() {
+            document.getElementById('btn-print').addEventListener('click', () => {
+                const invNum = document.getElementById('invoice-number').value || 'Invoice';
+                const clientName = document.getElementById('client-name').value || 'Client';
+                document.title = `${invNum} - ${clientName}`;
+                window.print();
+            });
+
+            window.addEventListener('afterprint', () => {
+                document.title = originalTitle;
+            });
+        }
+
+        function initDemandLetterButton() {
+            document.getElementById('btn-demand-letter').addEventListener('click', () => {
+                const engine = document.getElementById('demand-letter-engine');
+                const body = engine.querySelector('.accordion-body');
+                const icon = engine.querySelector('.lucide-chevron-down');
+                
+                // Open accordion if closed
+                if (!body.style.maxHeight) {
+                    body.style.maxHeight = body.scrollHeight + "px";
+                    icon.style.transform = 'rotate(180deg)';
+                }
+                
+                // Scroll to it
+                engine.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                
+                // Generate letter
+                generateDemandLetter(currentTone);
+            });
+        }
+
+        function initClearButton() {
+            document.getElementById('btn-clear').addEventListener('click', () => {
+                if (confirm("Are you sure you want to clear all invoice data? This cannot be undone.")) {
+                    // Reset inputs
+                    document.querySelectorAll('#invoice-tool input[type="text"], #invoice-tool input[type="email"], #invoice-tool textarea').forEach(el => el.value = '');
+                    
+                    // Reset dates
+                    setDefaultDates();
+                    
+                    // Reset line items
+                    lineItems = [];
+                    nextId = 1;
+                    addLineItem();
+                    
+                    // Reset late fee
+                    lateFee = 0;
+                    recalculateTotals();
+                    
+                    // Reset logo
+                    document.getElementById('remove-logo').click();
+                    
+                    showToast("Invoice cleared.", 'info');
+                }
+            });
+        }
+
+        function initJurisdictionSelect() {
+            const select = document.getElementById('jurisdiction-select');
+            const customContainer = document.getElementById('custom-rate-container');
+            
+            select.addEventListener('change', (e) => {
+                if (e.target.value === 'flat') {
+                    customContainer.classList.remove('hidden');
+                } else {
+                    customContainer.classList.add('hidden');
+                }
+                // Recalculate accordion height
+                const body = select.closest('.accordion-body');
+                if (body.style.maxHeight) {
+                    body.style.maxHeight = body.scrollHeight + "px";
+                }
+            });
+        }
+
+        function initToneButtons() {
+            const buttons = document.querySelectorAll('.tone-btn');
+            buttons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    // Reset all
+                    buttons.forEach(b => {
+                        b.classList.remove('bg-brand-500', 'text-white', 'active');
+                        b.classList.add('bg-white', 'text-slate-600');
+                    });
+                    // Set active
+                    e.target.classList.remove('bg-white', 'text-slate-600');
+                    e.target.classList.add('bg-brand-500', 'text-white', 'active');
+                    
+                    currentTone = e.target.dataset.tone;
+                    generateDemandLetter(currentTone);
+                });
+            });
+        }
+
+        function initQuickFillButtons() {
+            document.querySelectorAll('.quick-fill-buttons button').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const type = e.target.dataset.fill;
+                    const textarea = document.getElementById('invoice-notes');
+                    let text = "";
+                    
+                    if (type === 'net30') {
+                        text = "Payment is due within 30 days of the invoice date. Invoices unpaid after the due date will accrue a late payment fee of 1.5% per month (18% per annum) on the outstanding balance.";
+                    } else if (type === 'uk') {
+                        text = "Late payments will accrue interest under the Late Payment of Commercial Debts (Interest) Act 1998 at 8% above the Bank of England base rate, plus a fixed debt recovery charge as applicable.";
+                    } else if (type === 'eu') {
+                        text = "In accordance with EU Directive 2011/7/EU, invoices unpaid after the due date will accrue interest at the ECB reference rate plus 8 percentage points, plus a minimum flat-rate compensation of €40.";
+                    }
+                    
+                    textarea.value = text;
+                    showToast("Terms applied.", 'success');
+                });
+            });
+            
+            // Add line item button listener
+            document.getElementById('add-line-item').addEventListener('click', addLineItem);
+        }
+
+    </script>
+</body>
+</html>
